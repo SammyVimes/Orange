@@ -1,5 +1,8 @@
 package com.danilov.orange.util;
 
+import android.content.Context;
+import android.widget.Toast;
+
 public class Utilities {
 	
 	 /**
@@ -64,4 +67,15 @@ public class Utilities {
         // return current duration in milliseconds
         return currentDuration * 1000;
     }
+    
+    public static void toaster(final Context context, final String message) {
+    	Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+    
+    public static void sleep(int timeInMillis) {
+        try {
+            Thread.sleep(timeInMillis);
+        } catch (InterruptedException e) { }
+    }
+    
 }

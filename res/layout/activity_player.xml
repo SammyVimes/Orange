@@ -19,13 +19,26 @@
             android:id="@+id/songTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.80"
             android:textColor="@color/orange"
             android:textSize="16dp"
             android:paddingLeft="10dp"
             android:textStyle="bold"
             android:text="Test Song"
             android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.20"
+            android:paddingLeft="10dp"
+            android:text="0:15"
+            android:textColor="@color/orange"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
     </LinearLayout>
     
      <!-- Song Thumbnail Image -->
@@ -47,41 +60,41 @@
     
     
 	<!-- Footer -->
+
     <LinearLayout
         android:id="@+id/player_footer_bg"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:gravity="center">
-	    
-	
-	    <ImageButton
-	        android:id="@+id/btnLeft"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:background="@null"
-	        android:src="@drawable/btn_left" />
-	
-	    <ImageButton
-	        android:id="@+id/btnPlay"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:background="@null"
-	        android:src="@drawable/btn_play" />
-	    
-	    
-	    <ImageButton
-	        android:id="@+id/btnRight"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:background="@null"
-	        android:src="@drawable/btn_right" />
-	    
+        android:gravity="center" >
+
+        <ImageButton
+            android:id="@+id/btnLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.30"
+            android:background="@null"
+            android:src="@drawable/btn_left" />
+
+        <ImageButton
+            android:id="@+id/btnPlayPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.40"
+            android:background="@null"
+            android:src="@drawable/btn_play" />
+
+        <ImageButton
+            android:id="@+id/btnRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.30"
+            android:background="@null"
+            android:src="@drawable/btn_right" />
     </LinearLayout>
     
-    
     <SeekBar
-       android:id="@+id/musicProgress"
+       android:id="@+id/timeLine"
        style="@style/SeekBarOrange"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
