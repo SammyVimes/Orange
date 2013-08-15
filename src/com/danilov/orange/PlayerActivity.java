@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
@@ -27,21 +28,32 @@ import com.danilov.orange.util.Utilities;
 
 public class PlayerActivity extends BasePlayerActivity implements OnClickListener{
 
+	static final int UPDATE_INTERVAL = 250;
+	
 	private AudioPlayerService mAudioPlayerService;
 	private Intent mAudioPlayerServiceIntent;
 	private UpdateCurrentTrackTask updateCurrentTrackTask;
 	private Player mPlayer;
 	
+    private Timer waitForAudioPlayertimer;
+	private Handler handler = new Handler();
+    
 	private ImageButton btnPlayPause;
 	private ImageButton btnRight;
 	private ImageButton btnLeft;
 	private TextView time;
+	private TextView songTitle;
 	private SeekBar timeLine;
+	private PlayerState state = PlayerState.PAUSED;
+	
+	public enum PlayerState {
+		PLAYING, PAUSED;
+	}
 	
 	private static final String TAG = "PlayerActivity";
 	
 
-    private BroadcastReceiver audioPlayerBroadcastReceiver = new AudioPlayerBroadCastReceiver();
+    private BroadcastReceiver audioPlayerBroadcastReceiver = new AudioPlayerBroadcastReceiver();
     private ServiceConnection serviceConnection = new AudioPlayerServiceConnection();
 	
 	@Override
@@ -52,15 +64,10 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		btnRight = (ImageButton) findViewById(R.id.btnRight);
 		btnLeft = (ImageButton) findViewById(R.id.btnLeft);
 		time = (TextView) findViewById(R.id.time);
+		songTitle = (TextView) findViewById(R.id.songTitle);
 		timeLine = (SeekBar) findViewById(R.id.timeLine);
         timeLine.setOnSeekBarChangeListener(new TimeLineChangeListener());
         initButtons();
-        if( updateCurrentTrackTask == null) {
-            updateCurrentTrackTask = new UpdateCurrentTrackTask();
-            updateCurrentTrackTask.execute();
-        } else {
-            Log.e(TAG, "updateCurrentTrackTask is not null" );
-        }
 	}
 	
 	private void initButtons() {
@@ -76,10 +83,26 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         //bind to service
         mAudioPlayerServiceIntent = new Intent(this, AudioPlayerService.class);
         bindService(mAudioPlayerServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-    	
-    	audioPlayerBroadcastReceiver = new AudioPlayerBroadCastReceiver();
+        waitForAudioPlayertimer = new Timer();
+    	audioPlayerBroadcastReceiver = new AudioPlayerBroadcastReceiver();
         IntentFilter filter = new IntentFilter(AudioPlayerService.UPDATE_PLAYLIST);
         registerReceiver(audioPlayerBroadcastReceiver, filter );
+        refreshScreen();
+    }
+	
+	@Override
+    protected void onPause() {
+        unregisterReceiver(audioPlayerBroadcastReceiver);
+        audioPlayerBroadcastReceiver = null;
+        waitForAudioPlayertimer.cancel();
+        if (updateCurrentTrackTask != null) {
+        	updateCurrentTrackTask.stop();
+        }
+        
+        updateCurrentTrackTask = null;
+        
+        unbindService(serviceConnection);
+        super.onPause();
     }
 	
 
@@ -94,10 +117,21 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         runOnUiThread(new Runnable() {
             public void run() {
                 long elapsedMillis = mPlayer.getCurrentPosition();
-                String message = song.getTitle() + " - " + Utilities.milliSecondsToTimer(elapsedMillis);
                 timeLine.setMax((int) mPlayer.getDuration());
                 timeLine.setProgress((int) elapsedMillis);
-                time.setText(message);
+                time.setText(Utilities.milliSecondsToTimer(elapsedMillis));
+                songTitle.setText(song.getTitle());
+                if (mPlayer.isPlaying()) {
+                	if (state == PlayerState.PAUSED) {
+                		updatePlayPauseButtonState();
+                		state = PlayerState.PLAYING;
+                	}
+                } else {
+                	if (state == PlayerState.PLAYING) {
+                		updatePlayPauseButtonState();
+                		state = PlayerState.PAUSED;
+                	}
+                }
             }
         });
     }
@@ -129,7 +163,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                     mAudioPlayerService.seek(progress);
                     updatePlayPanel(mPlayer.getCurrentSong());
                 }
-            }, 170);
+            }, 0);
         }
 
         public void onStartTrackingTouch(SeekBar seekBar) {
@@ -146,8 +180,8 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	
 	private class UpdateCurrentTrackTask extends AsyncTask<Void, Song, Void> {
 
-        public boolean stopped = true;
-        public boolean paused = true;
+        public boolean stopped = false;
+        public boolean paused = false;
         
         @Override
         protected Void doInBackground(Void... params) {
@@ -158,7 +192,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                         publishProgress(currentTrack);
                     }
                 }
-                Utilities.sleep(250);
+                Utilities.sleep(350);
             }
             
             Log.d(TAG,"AsyncTask stopped");
@@ -193,7 +227,8 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             mAudioPlayerService = ((AudioPlayerService.AudioPlayerBinder) baBinder).getService();
             mPlayer = mAudioPlayerService.getPlayer();
             PlayList list = new PlayList();
-            list.add(new Song("girl", "/mnt/sdcard/audio/girl.mp3"));
+            list.add(new Song("Girl", "/mnt/sdcard/audio/girl.mp3"));
+            list.add(new Song("Happy Holidays", "/mnt/sdcard/audio/h.mp3"));
             list.restart();
             mPlayer.setPlayList(list);
             startService(mAudioPlayerServiceIntent);
@@ -213,13 +248,13 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         }
     }
 	
-	private class AudioPlayerBroadCastReceiver extends BroadcastReceiver {
+	private class AudioPlayerBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG,"AudioPlayerBroadCastReceiver.onReceive action=" + intent.getAction());
             if( AudioPlayerService.UPDATE_PLAYLIST.equals( intent.getAction())) {
-                //updatePlayQueue();
+                updatePlayQueue();
             }
         }
     }
@@ -249,5 +284,54 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	            break;
         }
 	}
+	
+	private void refreshScreen() {
+        if(mAudioPlayerService == null) {
+            updateScreenAsync();
+        } else {
+            updatePlayQueue();
+        }
+    }
+    
+    private void updateScreenAsync() {
+        waitForAudioPlayertimer.scheduleAtFixedRate( new TimerTask() {
+            
+            public void run() {
+                Log.d(TAG,"updateScreenAsync running timmer");
+                if(mAudioPlayerService != null) {
+                    waitForAudioPlayertimer.cancel();
+                    handler.post( new Runnable() {
+                        public void run() {
+                            updatePlayQueue();
+                        }
+                    });
+                }
+            }
+            }, 10, UPDATE_INTERVAL);
+    }
+	
+	public void updatePlayQueue() {
+//        Track[] queuedTracks = audioPlayer.getQueuedTracks();
+//        Log.d(TAG,"Queuedtracks (number): " + queuedTracks.length);
+//        
+//        if( queuedTracks.length == 0) {
+//            message.setText("No tracks selected");
+//            message.setVisibility(View.VISIBLE);
+//            nonEmptyQueueView.setVisibility(View.INVISIBLE);
+//        } else {
+//            message.setVisibility(View.GONE);
+//            message.setText("Tracks found: " + queuedTracks.length);
+//            queue.setAdapter(new TrackListAdapter(queuedTracks, layoutInflater));
+//            nonEmptyQueueView.setVisibility(View.VISIBLE);
+//        }
+//        
+        updatePlayPauseButtonState();
+        if(updateCurrentTrackTask == null) {
+            updateCurrentTrackTask = new UpdateCurrentTrackTask();
+            updateCurrentTrackTask.execute();
+        } else {
+            Log.e(TAG, "updateCurrentTrackTask is not null" );
+        }
+    }
 
 }

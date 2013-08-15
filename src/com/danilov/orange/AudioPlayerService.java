@@ -56,6 +56,12 @@ public class AudioPlayerService extends Service{
 		mPlayer.seek(progress);
 	}
 	
+	@Override
+	public void onDestroy() {
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
+	}
+	
 	public Player getPlayer() {
 		return mPlayer;
 	}
