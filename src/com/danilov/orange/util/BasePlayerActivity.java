@@ -2,10 +2,14 @@ package com.danilov.orange.util;
 
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.internal.app.ActionBarImpl;
 import com.actionbarsherlock.view.Menu;
 
 public abstract class BasePlayerActivity extends SherlockFragmentActivity {
@@ -17,7 +21,16 @@ public abstract class BasePlayerActivity extends SherlockFragmentActivity {
                 "fonts/logo.ttf");
 		int actionBarTitle = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
 		TextView actionBarTitleView = (TextView) getWindow().findViewById(actionBarTitle);
-		actionBarTitleView.setTypeface(TF);
+		if (actionBarTitleView == null) {
+			Object actionBar = getSupportActionBar();
+			if (actionBar instanceof ActionBarImpl) {
+				ActionBarImpl actionBarImpl = (ActionBarImpl) actionBar;
+				actionBarTitleView = actionBarImpl.getTitleTextView();
+			}
+        }
+		if (actionBarTitleView != null) {
+			actionBarTitleView.setTypeface(TF);
+		}
 	}
 
 	@Override
