@@ -59,6 +59,7 @@ public class AudioPlayerService extends Service{
 	@Override
 	public void onDestroy() {
 		unregisterReceiver(broadcastReceiver);
+		Log.d(TAG, "Service: onDestroy() called");
 		super.onDestroy();
 	}
 	
