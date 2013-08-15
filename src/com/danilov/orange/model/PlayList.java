@@ -23,11 +23,13 @@ public class PlayList {
 	}
 	
 	public Song next() {
-		if (currentSongPosition > playList.size()) {
-			return null;
-		}
-		mCurrentSong = playList.get(currentSongPosition);
 		currentSongPosition++;
+		if (currentSongPosition >= playList.size()) {
+			currentSongPosition = 0;
+			mCurrentSong = playList.get(0);
+		} else {
+			mCurrentSong = playList.get(currentSongPosition);
+		}
 		return mCurrentSong;
 	}
 	

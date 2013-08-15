@@ -187,9 +187,9 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         protected Void doInBackground(Void... params) {
             while(!stopped) {
                 if(!paused) {
-                    Song currentTrack = mPlayer.getCurrentSong();
-                    if( currentTrack != null ) {
-                        publishProgress(currentTrack);
+                    Song currentSong = mPlayer.getCurrentSong();
+                    if(currentSong != null ) {
+                        publishProgress(currentSong);
                     }
                 }
                 Utilities.sleep(350);
@@ -220,6 +220,11 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             this.paused = false;
         }
     }
+	
+	public void onNotPlaying() {
+		time.setText("-:-");
+		songTitle.setText("-");
+	}
 	
 	private final class AudioPlayerServiceConnection implements ServiceConnection {
         public void onServiceConnected(ComponentName className, IBinder baBinder) {

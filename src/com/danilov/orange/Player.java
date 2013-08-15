@@ -55,10 +55,12 @@ public class Player implements OnCompletionListener {
 	}
 	
 	public void nextSong() {
+		mCurrentSong = mPlayList.next();
 		play();
 	}
 	
 	public void previousSong() {
+		mCurrentSong = mPlayList.next();
 		play();
 	}
 	
@@ -70,10 +72,7 @@ public class Player implements OnCompletionListener {
 		} else if (mMediaPlayer != null) {
 			release();
 		}
-		mCurrentSong = mPlayList.next();
-		if (mCurrentSong == null) {
-			return;
-		}
+		mCurrentSong = mPlayList.getCurrentSong();
 		mMediaPlayer = new MediaPlayer();
 		try {
 			mMediaPlayer.setDataSource(context, mCurrentSong.getPath());
