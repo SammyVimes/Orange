@@ -31,7 +31,19 @@ public class Player implements OnCompletionListener {
 	}
 	
 	public void setPlayList(final PlayList playList) {
-		this.mPlayList = playList;
+		mPlayList = playList;
+		mPlayList.restart();
+		mPaused = true;
+		mCurrentSong = mPlayList.getCurrentSong(); 
+		mMediaPlayer = new MediaPlayer();
+		try {
+			mMediaPlayer.setDataSource(context, mPlayList.getCurrentSong().getPath());
+			mMediaPlayer.prepare();
+		} catch (IOException e) {
+			Log.e(TAG,"error trying to play " + mCurrentSong.getTitle() , e);
+			Utilities.toaster(context, "error trying to play track: " + mCurrentSong.getTitle() + "\nError: " +
+					e.getMessage());
+		}
 	}
 	
 	public Song getCurrentSong() {
@@ -56,22 +68,23 @@ public class Player implements OnCompletionListener {
 	
 	public void nextSong() {
 		mCurrentSong = mPlayList.next();
-		play();
+		play(true);
 	}
 	
 	public void previousSong() {
 		mCurrentSong = mPlayList.next();
-		play();
+		play(true);
 	}
 	
-	public void play() {
-		if (mMediaPlayer != null && mPaused) {
+	public void play(boolean playAnother) {
+		if (mMediaPlayer != null && mPaused && !playAnother) {
 			mMediaPlayer.start();
 			mPaused = false;
 			return;
 		} else if (mMediaPlayer != null) {
 			release();
 		}
+		mPaused = false;
 		mCurrentSong = mPlayList.getCurrentSong();
 		mMediaPlayer = new MediaPlayer();
 		try {
@@ -95,7 +108,14 @@ public class Player implements OnCompletionListener {
         if(mPlayList.isEmpty() || mMediaPlayer == null) {
             return false;
         }
-        return mMediaPlayer.isPlaying();
+        boolean isPlaying = false;
+        try {
+        	isPlaying = mMediaPlayer.isPlaying();
+        } catch (IllegalStateException e) {
+        	Utilities.toaster(context, e.getMessage());
+        }
+    	return isPlaying;
+        
     }
 	
 	public void seek(int timeInMillis) {
@@ -112,9 +132,12 @@ public class Player implements OnCompletionListener {
 	}
 
 	@Override
-	public void onCompletion(MediaPlayer arg0) {
-		// TODO Auto-generated method stub
-		
+	public void onCompletion(MediaPlayer player) {
+		nextSong();
+	}
+
+	public PlayList getPlayList() {
+		return mPlayList;
 	}
 	
 	

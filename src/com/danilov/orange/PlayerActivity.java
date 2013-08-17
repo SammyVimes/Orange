@@ -140,11 +140,9 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         private Timer delayedSeekTimer;
         
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if( fromUser ) {
+            if(fromUser) {
                 Log.d(TAG,"TimeLineChangeListener progress received from user: "+progress);
-                
                 scheduleSeek(progress);
-                
                 return;
             }
         }
@@ -163,7 +161,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                     mAudioPlayerService.seek(progress);
                     updatePlayPanel(mPlayer.getCurrentSong());
                 }
-            }, 0);
+            }, 5);
         }
 
         public void onStartTrackingTouch(SeekBar seekBar) {
@@ -194,9 +192,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                 }
                 Utilities.sleep(350);
             }
-            
             Log.d(TAG,"AsyncTask stopped");
-            
             return null;
         }
         
@@ -231,11 +227,12 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             Log.d(TAG,"AudioPlayerServiceConnection: Service connected");
             mAudioPlayerService = ((AudioPlayerService.AudioPlayerBinder) baBinder).getService();
             mPlayer = mAudioPlayerService.getPlayer();
-            PlayList list = new PlayList();
-            list.add(new Song("Girl", "/mnt/sdcard/audio/girl.mp3"));
-            list.add(new Song("Happy Holidays", "/mnt/sdcard/audio/h.mp3"));
-            list.restart();
-            mPlayer.setPlayList(list);
+            if (mPlayer.getPlayList() == null) {
+                PlayList list = new PlayList();
+                list.add(new Song("Girl", "/mnt/sdcard/audio/girl.mp3"));
+                list.add(new Song("Happy Holidays", "/mnt/sdcard/audio/h.mp3"));
+                mPlayer.setPlayList(list);
+            }
             startService(mAudioPlayerServiceIntent);
         }
 
@@ -269,7 +266,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         if (mPlayer.isPlaying() ) {
             mPlayer.pause();
         } else {
-            mPlayer.play();
+            mPlayer.play(false);
         }
         updatePlayPauseButtonState();
     }
@@ -316,20 +313,6 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
     }
 	
 	public void updatePlayQueue() {
-//        Track[] queuedTracks = audioPlayer.getQueuedTracks();
-//        Log.d(TAG,"Queuedtracks (number): " + queuedTracks.length);
-//        
-//        if( queuedTracks.length == 0) {
-//            message.setText("No tracks selected");
-//            message.setVisibility(View.VISIBLE);
-//            nonEmptyQueueView.setVisibility(View.INVISIBLE);
-//        } else {
-//            message.setVisibility(View.GONE);
-//            message.setText("Tracks found: " + queuedTracks.length);
-//            queue.setAdapter(new TrackListAdapter(queuedTracks, layoutInflater));
-//            nonEmptyQueueView.setVisibility(View.VISIBLE);
-//        }
-//        
         updatePlayPauseButtonState();
         if(updateCurrentTrackTask == null) {
             updateCurrentTrackTask = new UpdateCurrentTrackTask();

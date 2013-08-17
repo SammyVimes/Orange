@@ -53,6 +53,9 @@ public class AudioPlayerService extends Service{
 	}
 	
 	public void seek(final int progress) {
+		if (!mPlayer.isPlaying()) {
+			mPlayer.play(false);
+		}
 		mPlayer.seek(progress);
 	}
 	
