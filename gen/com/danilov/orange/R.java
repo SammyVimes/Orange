@@ -1076,6 +1076,7 @@ containing a value of this type.
         public static final int textfield_focused_holo_light=0x7f02010f;
     }
     public static final class id {
+        public static final int RelativeLayout1=0x7f04003c;
         public static final int abs__action_bar=0x7f040020;
         public static final int abs__action_bar_container=0x7f04001f;
         public static final int abs__action_bar_subtitle=0x7f040011;
@@ -1115,7 +1116,7 @@ containing a value of this type.
         public static final int abs__textButton=0x7f040013;
         public static final int abs__title=0x7f04001b;
         public static final int abs__up=0x7f04000b;
-        public static final int action_settings=0x7f04003b;
+        public static final int action_settings=0x7f04003e;
         public static final int btnLeft=0x7f040037;
         public static final int btnPlayPause=0x7f040038;
         public static final int btnRight=0x7f040039;
@@ -1124,6 +1125,7 @@ containing a value of this type.
         public static final int homeAsUp=0x7f040006;
         public static final int listMode=0x7f040002;
         public static final int normal=0x7f040001;
+        public static final int pager=0x7f04003b;
         public static final int player_footer_bg=0x7f040036;
         public static final int player_header_bg=0x7f040032;
         public static final int showCustom=0x7f040008;
@@ -1134,6 +1136,7 @@ containing a value of this type.
         public static final int tabMode=0x7f040003;
         public static final int time=0x7f040034;
         public static final int timeLine=0x7f04003a;
+        public static final int tvPage=0x7f04003d;
         public static final int useLogo=0x7f040004;
         public static final int wrap_content=0x7f040000;
     }
@@ -1163,11 +1166,14 @@ containing a value of this type.
         public static final int abs__search_view=0x7f030013;
         public static final int abs__simple_dropdown_hint=0x7f030014;
         public static final int activity_player=0x7f030015;
-        public static final int sherlock_spinner_dropdown_item=0x7f030016;
-        public static final int sherlock_spinner_item=0x7f030017;
+        public static final int activity_playlist_picker=0x7f030016;
+        public static final int fragment=0x7f030017;
+        public static final int sherlock_spinner_dropdown_item=0x7f030018;
+        public static final int sherlock_spinner_item=0x7f030019;
     }
     public static final class menu {
         public static final int player=0x7f0b0000;
+        public static final int playlist_picker=0x7f0b0001;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

@@ -282,7 +282,8 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	            updatePlayPauseButtonState();
 	            break;
 	        case R.id.btnLeft:
-	        	mPlayer.previousSong();
+	            Intent intent = new Intent(this, PlaylistPickerActivity.class);
+	            startActivity(intent);
 	            break;
         }
 	}

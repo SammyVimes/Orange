@@ -19,7 +19,6 @@ public class Song {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
 	public Uri getPath() {
 		return Uri.parse(path);
 	}
