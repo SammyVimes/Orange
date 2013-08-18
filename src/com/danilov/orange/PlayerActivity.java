@@ -96,6 +96,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         audioPlayerBroadcastReceiver = null;
         waitForAudioPlayertimer.cancel();
         if (updateCurrentTrackTask != null) {
+        	updateCurrentTrackTask.cancel(true);
         	updateCurrentTrackTask.stop();
         }
         
@@ -192,7 +193,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                 }
                 Utilities.sleep(350);
             }
-            Log.d(TAG,"AsyncTask stopped");
+            Log.d(TAG, this.toString() + ": AsyncTask stopped");
             return null;
         }
         

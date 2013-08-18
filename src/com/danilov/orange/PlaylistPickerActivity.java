@@ -26,7 +26,7 @@ public class PlaylistPickerActivity extends BasePlayerActivity {
 		setContentView(R.layout.activity_playlist_picker);
 		mPager = (ViewPager) findViewById(R.id.pager);
 		List<Fragment> fragments = new ArrayList<Fragment>();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 2; i++) {
 			fragments.add(PageFragment.newInstance(i));
 		}
 		initActionBarTabs();
@@ -73,7 +73,7 @@ public class PlaylistPickerActivity extends BasePlayerActivity {
 	       
 	    };
 
-	    for (int i = 0; i < 5; i++) {
+	    for (int i = 0; i < 2; i++) {
 	        actionBar.addTab(
 	                actionBar.newTab()
 	                        .setText("Tab " + (i + 1))

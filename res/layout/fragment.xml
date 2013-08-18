@@ -5,11 +5,15 @@
 	 android:layout_width="match_parent"
 	 android:layout_height="match_parent"
 	 android:orientation="vertical">
-	<TextView
-	 android:id="@+id/tvPage"
-	 android:layout_width="match_parent"
-	 android:layout_height="match_parent"
-	 android:gravity="center"
-	 android:textAppearance="?android:attr/textAppearanceLarge">
-	</TextView>
+	<GridView
+        android:id="@+id/grid_base"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawSelectorOnTop="true"
+        android:fadingEdge="vertical"
+        android:fastScrollEnabled="true"
+        android:horizontalSpacing="5px"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        android:verticalSpacing="5px" />
 </RelativeLayout>
