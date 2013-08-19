@@ -4,6 +4,9 @@
     android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="1.0" >
+    
+    <!-- The main service uses a sticky broadcast -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
     <uses-sdk
         android:minSdkVersion="8"

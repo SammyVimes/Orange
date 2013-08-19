@@ -22,11 +22,14 @@ public class Player implements OnCompletionListener {
 	private PlayList mPlayList;
 	private Song mCurrentSong;
 	
+	private AudioPlayerService.CompletionListener mCompletionListener;
+	
 	
 	private boolean mPaused = false;
 	
-	public Player(final Context context) {
+	public Player(final Context context, final AudioPlayerService.CompletionListener completionListener) {
 		mMediaPlayer = new MediaPlayer();
+		mCompletionListener = completionListener;
 		this.context = context;
 	}
 	
@@ -36,6 +39,7 @@ public class Player implements OnCompletionListener {
 		mPaused = true;
 		mCurrentSong = mPlayList.getCurrentSong(); 
 		mMediaPlayer = new MediaPlayer();
+		mMediaPlayer.setOnCompletionListener(this);
 		try {
 			mMediaPlayer.setDataSource(context, mPlayList.getCurrentSong().getPath());
 			mMediaPlayer.prepare();
@@ -133,7 +137,7 @@ public class Player implements OnCompletionListener {
 
 	@Override
 	public void onCompletion(MediaPlayer player) {
-		nextSong();
+		mCompletionListener.onCompletion();
 	}
 
 	public PlayList getPlayList() {

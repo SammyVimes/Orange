@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.IntentSender.SendIntentException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import com.actionbarsherlock.view.Menu;
 import com.danilov.orange.model.PlayList;
 import com.danilov.orange.model.Song;
 import com.danilov.orange.util.BasePlayerActivity;
+import com.danilov.orange.util.IntentActions;
 import com.danilov.orange.util.Utilities;
 
 public class PlayerActivity extends BasePlayerActivity implements OnClickListener{
@@ -66,14 +68,13 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		time = (TextView) findViewById(R.id.time);
 		songTitle = (TextView) findViewById(R.id.songTitle);
 		timeLine = (SeekBar) findViewById(R.id.timeLine);
-        timeLine.setOnSeekBarChangeListener(new TimeLineChangeListener());
-        initButtons();
 	}
 	
-	private void initButtons() {
+	public void initControls() {
 		btnPlayPause.setOnClickListener(this);
 		btnRight.setOnClickListener(this);
 		btnLeft.setOnClickListener(this);
+		timeLine.setOnSeekBarChangeListener(new TimeLineChangeListener());
 	}
 	
 
@@ -85,7 +86,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         bindService(mAudioPlayerServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         waitForAudioPlayertimer = new Timer();
     	audioPlayerBroadcastReceiver = new AudioPlayerBroadcastReceiver();
-        IntentFilter filter = new IntentFilter(AudioPlayerService.UPDATE_PLAYLIST);
+        IntentFilter filter = new IntentFilter(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
         registerReceiver(audioPlayerBroadcastReceiver, filter );
         refreshScreen();
     }
@@ -125,12 +126,10 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                 if (mPlayer.isPlaying()) {
                 	if (state == PlayerState.PAUSED) {
                 		updatePlayPauseButtonState();
-                		state = PlayerState.PLAYING;
                 	}
                 } else {
                 	if (state == PlayerState.PLAYING) {
                 		updatePlayPauseButtonState();
-                		state = PlayerState.PAUSED;
                 	}
                 }
             }
@@ -139,11 +138,12 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	
 	private class TimeLineChangeListener implements SeekBar.OnSeekBarChangeListener {
         private Timer delayedSeekTimer;
+        private int progressFromUser = 0;
         
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if(fromUser) {
                 Log.d(TAG,"TimeLineChangeListener progress received from user: "+progress);
-                scheduleSeek(progress);
+                progressFromUser = progress;
                 return;
             }
         }
@@ -159,20 +159,26 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                 @Override
                 public void run() {
                     Log.d(TAG,"Delayed Seek Timer run");
-                    mAudioPlayerService.seek(progress);
-                    updatePlayPanel(mPlayer.getCurrentSong());
+                    Intent intent = new Intent(IntentActions.INTENT_SEEK);
+                    intent.putExtra(IntentActions.INTENT_EXTRA_INTEGER_SEEK, progress);
+                    sendIntentToService(intent);
                 }
             }, 5);
         }
 
         public void onStartTrackingTouch(SeekBar seekBar) {
             Log.d(TAG,"TimeLineChangeListener started tracking touch");
-            updateCurrentTrackTask.pause();
+            if (updateCurrentTrackTask != null) {
+            	updateCurrentTrackTask.pause();
+            }
         }
 
         public void onStopTrackingTouch(SeekBar seekBar) {
             Log.d(TAG,"TimeLineChangeListener stopped tracking touch");
-            updateCurrentTrackTask.unPause();
+            scheduleSeek(progressFromUser);
+            if (updateCurrentTrackTask != null) {
+            	updateCurrentTrackTask.unPause();
+            }
         }
         
     }
@@ -202,6 +208,9 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             if( stopped || paused ) {
                 return; //to avoid glitches
             }
+        	if (!mPlayer.isPlaying()) {
+        		pause();
+        	}
             updatePlayPanel(song[0]);
         }
 
@@ -226,6 +235,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	private final class AudioPlayerServiceConnection implements ServiceConnection {
         public void onServiceConnected(ComponentName className, IBinder baBinder) {
             Log.d(TAG,"AudioPlayerServiceConnection: Service connected");
+            initControls();
             mAudioPlayerService = ((AudioPlayerService.AudioPlayerBinder) baBinder).getService();
             mPlayer = mAudioPlayerService.getPlayer();
             if (mPlayer.getPlayList() == null) {
@@ -246,8 +256,10 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	private void updatePlayPauseButtonState() {
         if(mPlayer.isPlaying()) {
         	btnPlayPause.setImageResource(R.drawable.btn_stop);
+    		state = PlayerState.PLAYING;
         } else {
         	btnPlayPause.setImageResource(R.drawable.btn_play);
+    		state = PlayerState.PAUSED;
         }
     }
 	
@@ -256,8 +268,8 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG,"AudioPlayerBroadCastReceiver.onReceive action=" + intent.getAction());
-            if( AudioPlayerService.UPDATE_PLAYLIST.equals( intent.getAction())) {
-                updatePlayQueue();
+            if(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE.equals( intent.getAction())) {
+                updatePlayPauseButtonState();
             }
         }
     }
@@ -265,11 +277,11 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 
 	 private void onClickPlayPause() {
         if (mPlayer.isPlaying() ) {
-            mPlayer.pause();
+            updateCurrentTrackTask.pause();
         } else {
-            mPlayer.play(false);
+            updateCurrentTrackTask.unPause();
         }
-        updatePlayPauseButtonState();
+        sendIntentToService(new Intent(IntentActions.INTENT_PLAY_PAUSE));
     }
 
 	@Override
@@ -279,7 +291,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	            onClickPlayPause();
 	            break;
 	        case R.id.btnRight:
-	            mPlayer.nextSong();
+	            nextSong();
 	            updatePlayPauseButtonState();
 	            break;
 	        case R.id.btnLeft:
@@ -296,6 +308,20 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             updatePlayQueue();
         }
     }
+	
+	private void nextSong() {
+		updateCurrentTrackTask.unPause();
+		sendIntentToService(new Intent(IntentActions.INTENT_NEXT_SONG));
+	}
+	
+	private void previousSong() {
+		updateCurrentTrackTask.unPause();
+		sendIntentToService(new Intent(IntentActions.INTENT_PREVIOUS_SONG));
+	}
+	
+	private void sendIntentToService(final Intent intent) {
+		sendBroadcast(intent);
+	}
     
     private void updateScreenAsync() {
         waitForAudioPlayertimer.scheduleAtFixedRate( new TimerTask() {

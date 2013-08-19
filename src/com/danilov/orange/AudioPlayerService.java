@@ -1,5 +1,7 @@
 package com.danilov.orange;
 
+import com.danilov.orange.util.IntentActions;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -44,12 +46,12 @@ public class AudioPlayerService extends Service{
 	public void onCreate() {
 		Log.v(TAG, "AudioPlayerService:onCreate() called");
 		IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(PLAY_TRACK);
-        intentFilter.addAction(QUEUE_TRACK);
-        intentFilter.addAction(PLAY_ALBUM);
-        intentFilter.addAction(QUEUE_ALBUM);
+        intentFilter.addAction(IntentActions.INTENT_NEXT_SONG);
+        intentFilter.addAction(IntentActions.INTENT_PLAY_PAUSE);
+        intentFilter.addAction(IntentActions.INTENT_PREVIOUS_SONG);
+        intentFilter.addAction(IntentActions.INTENT_SEEK);
         registerReceiver(broadcastReceiver, intentFilter);
-        mPlayer = new Player(getApplicationContext());
+        mPlayer = new Player(getApplicationContext(), new CompletionListener());
 	}
 	
 	public void seek(final int progress) {
@@ -70,6 +72,30 @@ public class AudioPlayerService extends Service{
 		return mPlayer;
 	}
 	
+	private void sendIntent(final String action) {
+		Intent intent = new Intent(action);
+		sendBroadcast(intent);
+	}
+	
+	private void playPause() {
+		if (mPlayer.isPlaying()) {
+			mPlayer.pause();
+		} else {
+			mPlayer.play(false);
+		}
+		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
+	}
+	
+	private void nextSong() {
+		mPlayer.nextSong();
+		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
+	}
+	
+	private void previousSong() {
+		mPlayer.previousSong();
+		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
+	}
+	
 	private class AudioPlayerBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -77,21 +103,27 @@ public class AudioPlayerService extends Service{
             String action = intent.getAction();
             long id = intent.getLongExtra("id", -1);
             Log.d(TAG, "Received intent for action " + intent.getAction() + " for id: " + id);
-//
-//            if( PLAY_ALBUM.equals(action)) {
-//                playAlbum(id);
-//            } else if( QUEUE_ALBUM.equals(action)) {
-//                queueAlbum(id);
-//            } else if( PLAY_TRACK.equals(action)) {
-//                playTrack(id);
-//            } else if( QUEUE_TRACK.equals(action)) {
-//                queueTrack(id);
-//            } else {
-//                Log.d(TAG, "Action not recognized: " + action);
-//            }
+            if (IntentActions.INTENT_PLAY_PAUSE.equals(action)) {
+            	playPause();
+            } else if (IntentActions.INTENT_NEXT_SONG.equals(action)) {
+            	nextSong();
+            } else if (IntentActions.INTENT_PREVIOUS_SONG.equals(action)) {
+            	previousSong();
+            } else if (IntentActions.INTENT_SEEK.equals(action)) {
+            	int progress = intent.getIntExtra(IntentActions.INTENT_EXTRA_INTEGER_SEEK, 0);
+            	seek(progress);
+            }
         }
 
     }
+	
+	public class CompletionListener {
+		
+		public void onCompletion() {
+			nextSong();
+		}
+		
+	}
 	
 	
 
