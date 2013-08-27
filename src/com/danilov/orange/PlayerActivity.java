@@ -227,8 +227,8 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             mAudioPlayerService = ((AudioPlayerService.AudioPlayerBinder) baBinder).getService();
             mPlayer = mAudioPlayerService.getPlayer();
             PlayList list = new PlayList();
-            list.add(new Song("Girl", "/mnt/sdcard/audio/girl.mp3"));
-            list.add(new Song("Happy Holidays", "/mnt/sdcard/audio/h.mp3"));
+            list.add(new Song("0", "blink", "Girl", "/mnt/sdcard/audio/girl.mp3"));
+            list.add(new Song("1", "blink", "Happy Holidays", "/mnt/sdcard/audio/h.mp3"));
             list.restart();
             mPlayer.setPlayList(list);
             startService(mAudioPlayerServiceIntent);
