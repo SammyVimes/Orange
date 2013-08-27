@@ -41,7 +41,7 @@ public class MockService {
 	public static List<Song> getSongsList(int listSize) {
 		List<Song> songs = new ArrayList<Song>();
 		for (int i = 0; i < listSize; i++) {
-			songs.add(new Song("123", "456"));
+			songs.add(new Song("2", "1", "123", "456"));
 		}
 		return songs;
 	}
