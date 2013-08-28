@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.danilov.orange.model.PlayList;
 import com.danilov.orange.model.Song;
+import com.danilov.orange.task.CacheCreateTask;
 import com.danilov.orange.util.BasePlayerActivity;
 import com.danilov.orange.util.IntentActions;
 import com.danilov.orange.util.Utilities;
@@ -61,6 +62,8 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		CacheCreateTask temp = new CacheCreateTask(this, null);
+		temp.execute();
 		setContentView(R.layout.activity_player);
 		btnPlayPause = (ImageButton) findViewById(R.id.btnPlayPause);
 		btnRight = (ImageButton) findViewById(R.id.btnRight);

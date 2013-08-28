@@ -11,7 +11,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 
-public class CacheCreateTask extends AsyncTask<Object, Void, Object>{
+public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	
 	private ITaskCallback mCallback;
 	private Activity mActivity;
@@ -25,8 +25,8 @@ public class CacheCreateTask extends AsyncTask<Object, Void, Object>{
 	}
 	
 	@Override
-	protected Object doInBackground(Object... arg0) {
-		getAllSongs();
+	protected Object doInBackground(Void... arg0) {
+		Object o = getAllSongs();
 		return null;
 	}
 	
@@ -70,6 +70,7 @@ public class CacheCreateTask extends AsyncTask<Object, Void, Object>{
 			String path = cursor.getString(4);
 			Song song = new Song(id, artist, title, path);
 			song.setAlbum(album);
+			songs.add(song);
 		}
 		return songs;
 	}

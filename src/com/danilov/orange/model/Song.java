@@ -48,4 +48,9 @@ public class Song {
 		this.mPath = path;
 	}
 	
+	@Override
+	public String toString() {
+		return mArtist + " - " + mTitle;
+	}
+	
 }

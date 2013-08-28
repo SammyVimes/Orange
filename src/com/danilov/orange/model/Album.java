@@ -24,39 +24,42 @@ public class Album {
 		mSongsCount = mSongs.size();
 	}
 
-	public String getmAlbumID() {
+	public String getAlbumID() {
 		return mAlbumID;
 	}
 
-	public void setmAlbumID(String mAlbumID) {
+	public void setAlbumID(String mAlbumID) {
 		this.mAlbumID = mAlbumID;
 	}
 
-	public String getmAlbumName() {
+	public String getAlbumName() {
 		return mAlbumName;
 	}
 
-	public void setmAlbumName(String mAlbumName) {
+	public void setAlbumName(String mAlbumName) {
 		this.mAlbumName = mAlbumName;
 	}
 
-	public String getmArtistName() {
+	public String getArtistName() {
 		return mArtistName;
 	}
 
-	public void setmArtistName(String mArtistName) {
+	public void setArtistName(String mArtistName) {
 		this.mArtistName = mArtistName;
 	}
 
-	public List<Song> getmSongs() {
+	public List<Song> getSongs() {
 		return mSongs;
 	}
 
-	public void setmSongs(List<Song> mSongs) {
+	public void setSongs(List<Song> mSongs) {
 		this.mSongs = mSongs;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return mArtistName + ": " + mAlbumName;
+	}
 	
 	
 }
