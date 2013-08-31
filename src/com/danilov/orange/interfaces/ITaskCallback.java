@@ -2,6 +2,7 @@ package com.danilov.orange.interfaces;
 
 public interface ITaskCallback {
 
-	public void onTaskComplete();
+	//object to pass
+	public void onTaskComplete(final Object object);
 	
 }

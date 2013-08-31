@@ -62,8 +62,6 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		CacheCreateTask temp = new CacheCreateTask(this, null);
-		temp.execute();
 		setContentView(R.layout.activity_player);
 		btnPlayPause = (ImageButton) findViewById(R.id.btnPlayPause);
 		btnRight = (ImageButton) findViewById(R.id.btnRight);
@@ -242,11 +240,11 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             mAudioPlayerService = ((AudioPlayerService.AudioPlayerBinder) baBinder).getService();
             mPlayer = mAudioPlayerService.getPlayer();
             if (mPlayer.getPlayList() == null) {
-            PlayList list = new PlayList();
-            list.add(new Song("0", "blink", "Girl", "/mnt/sdcard/audio/girl.mp3"));
-            list.add(new Song("1", "blink", "Happy Holidays", "/mnt/sdcard/audio/h.mp3"));
-            list.restart();
-            mPlayer.setPlayList(list);
+	            PlayList list = new PlayList();
+	            list.add(new Song("0", "blink", "Girl", "/mnt/sdcard/audio/girl.mp3"));
+	            list.add(new Song("1", "blink", "Happy Holidays", "/mnt/sdcard/audio/h.mp3"));
+	            list.restart();
+	            mPlayer.setPlayList(list);
             }
             startService(mAudioPlayerServiceIntent);
         }

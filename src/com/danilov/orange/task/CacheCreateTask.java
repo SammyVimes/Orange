@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.danilov.orange.interfaces.ITaskCallback;
 import com.danilov.orange.model.Song;
+import com.danilov.orange.util.MusicSort;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -26,8 +27,7 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	
 	@Override
 	protected Object doInBackground(Void... arg0) {
-		Object o = getAllSongs();
-		return null;
+		return MusicSort.sortByAlbums(getAllSongs());
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	
 	@Override
 	protected void onPostExecute(Object result) {
-		mCallback.onTaskComplete();
+		mCallback.onTaskComplete(result);
     }
 	
 	
@@ -78,7 +78,7 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	private class NullCallback implements ITaskCallback {
 
 		@Override
-		public void onTaskComplete() {
+		public void onTaskComplete(final Object object) {
 		}
 	}
 	
