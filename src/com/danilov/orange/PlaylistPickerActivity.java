@@ -8,12 +8,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.danilov.orange.fragments.AlbumPickerFragment;
 import com.danilov.orange.fragments.PageFragment;
 import com.danilov.orange.interfaces.ITaskCallback;
+import com.danilov.orange.interfaces.IFragmentCreateCallback;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.task.CacheCreateTask;
 import com.danilov.orange.util.BasePlayerActivity;
@@ -23,20 +25,25 @@ public class PlaylistPickerActivity extends BasePlayerActivity {
 	
 	private ViewPager mPager;
 	private PagerAdapter mAdapter;
+	private List<Fragment> mFragments;
+	private boolean restoring = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playlist_picker);
 		mPager = (ViewPager) findViewById(R.id.pager);
-		List<Fragment> fragments = new ArrayList<Fragment>();
-		fragments.add(PageFragment.newInstance(PageFragment.ALBUM_FRAGMENT_TYPE));
+		mFragments = new ArrayList<Fragment>();
+		FragmentCreatedCallback callback = new FragmentCreatedCallback();
+		if (savedInstanceState == null) {
+			mFragments.add(PageFragment.newInstance(PageFragment.ALBUM_FRAGMENT_TYPE, callback));
+			mAdapter = new PagerAdapter(getSupportFragmentManager(), mFragments);
+			mPager.setAdapter(mAdapter);
+		} else {
+			restoring = true;
+		}
 		initActionBarTabs();
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());
-		mAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
-		mPager.setAdapter(mAdapter);
-		CacheCreateTask tmp = new CacheCreateTask(this, new CacheTaskCallback());
-		tmp.execute();
 	}
 	
 	private void initActionBarTabs() {
@@ -77,6 +84,34 @@ public class PlaylistPickerActivity extends BasePlayerActivity {
 			}
 		}
 		return fragment;
+	}
+	
+	private void onAllFragmentsCreated() {
+		if (restoring) {
+			mAdapter = new PagerAdapter(getSupportFragmentManager(), mFragments);
+			mPager.setAdapter(mAdapter);
+		}
+		CacheCreateTask tmp = new CacheCreateTask(this, new CacheTaskCallback());
+		tmp.execute();
+	}
+	
+	public class FragmentCreatedCallback implements IFragmentCreateCallback {
+		
+		private int createdViews = 0;
+		private int viewsToCreate = 1;
+		
+		@Override
+		public void onFragmentCreated(final Fragment fragment) {
+			createdViews++;
+			PageFragment newFragment = (PageFragment) fragment;
+			if (restoring) {
+				mFragments.add(newFragment);
+			}
+			if (createdViews >= viewsToCreate) {
+				onAllFragmentsCreated();
+			}
+		}
+		
 	}
 	
 	private class MyOnPageChangeListener implements OnPageChangeListener {

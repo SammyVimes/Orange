@@ -35,7 +35,9 @@ public class PlayList {
 	
 	public void restart() {
 		currentSongPosition = 0;
-		mCurrentSong = playList.get(0);
+		if (!isEmpty()) {
+			mCurrentSong = playList.get(0);
+		}
 	}
 	
 	public Song getCurrentSong() {

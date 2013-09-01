@@ -3,8 +3,10 @@ package com.danilov.orange.fragments;
 import java.util.List;
 import java.util.Random;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.danilov.orange.R;
+import com.danilov.orange.interfaces.IFragmentCreateCallback;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.test.MockService;
 import com.danilov.orange.util.GridAdapter;
@@ -26,11 +29,13 @@ public class PageFragment extends SherlockFragment {
   public static final int ALL_SONGS_FRAGMENT_TYPE = 2;
   public int mType;
   
+  protected IFragmentCreateCallback mCallback;
+  
   protected GridAdapter mAdapter;
   protected GridView mGridView;
   protected ProgressBar mProgressBar;
   
-  public static PageFragment newInstance(final int type) {
+  public static PageFragment newInstance(final int type, final IFragmentCreateCallback callback) {
 	PageFragment fragment = null;
 	switch (type) {
 	case ALBUM_FRAGMENT_TYPE:
@@ -45,6 +50,7 @@ public class PageFragment extends SherlockFragment {
 	default:
 		break;
 	}
+	fragment.setCallback(callback);
     return fragment;
   }
   
@@ -54,6 +60,9 @@ public class PageFragment extends SherlockFragment {
     Log.d("PF", "onCreate");
     int layout = R.layout.grid_item;
     mAdapter = new GridAdapter(getSherlockActivity(), layout);
+    if (mCallback == null) {
+    	mCallback = new NullCallback();
+    }
   }
   
    @Override
@@ -62,7 +71,12 @@ public class PageFragment extends SherlockFragment {
 	    View view = inflater.inflate(R.layout.fragment, null);
 	    Log.d("PF", "onCreateView");
 	    mGridView = (GridView)view.findViewById(R.id.grid_base);
-	    mGridView.setNumColumns(2);
+	    int orientation = getResources().getConfiguration().orientation; 
+	    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+	    	mGridView.setNumColumns(2);
+	    } else {
+	    	mGridView.setNumColumns(4);	
+	    }
 	    mGridView.setAdapter(mAdapter);
 	    mProgressBar = (ProgressBar)view.findViewById(R.id.progressBar);
 	    return view;
@@ -74,6 +88,18 @@ public class PageFragment extends SherlockFragment {
 	
 	public int getType() {
 		return mType;
+	}
+	
+	private void setCallback(final IFragmentCreateCallback callback) {
+		mCallback = callback;
+	}
+	
+	protected class NullCallback implements IFragmentCreateCallback {
+
+		@Override
+		public void onFragmentCreated(final Fragment fragment) {
+		}
+		
 	}
   
 }

@@ -55,6 +55,9 @@ public class AudioPlayerService extends Service{
 	}
 	
 	public void seek(final int progress) {
+		if (mPlayer.getPlayList().isEmpty()) {
+			return;
+		}
 		if (!mPlayer.isPlaying()) {
 			mPlayer.play(false);
 		}
@@ -78,6 +81,9 @@ public class AudioPlayerService extends Service{
 	}
 	
 	private void playPause() {
+		if (mPlayer.getPlayList().isEmpty()) {
+			return;
+		}
 		if (mPlayer.isPlaying()) {
 			mPlayer.pause();
 		} else {
@@ -87,11 +93,17 @@ public class AudioPlayerService extends Service{
 	}
 	
 	private void nextSong() {
+		if (mPlayer.getPlayList().isEmpty()) {
+			return;
+		}
 		mPlayer.nextSong();
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
 	}
 	
 	private void previousSong() {
+		if (mPlayer.getPlayList().isEmpty()) {
+			return;
+		}
 		mPlayer.previousSong();
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
 	}

@@ -101,9 +101,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         	updateCurrentTrackTask.cancel(true);
         	updateCurrentTrackTask.stop();
         }
-        
         updateCurrentTrackTask = null;
-        
         unbindService(serviceConnection);
         super.onPause();
     }
@@ -194,8 +192,10 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             while(!stopped) {
                 if(!paused) {
                     Song currentSong = mPlayer.getCurrentSong();
-                    if(currentSong != null ) {
+                    if (currentSong != null ) {
                         publishProgress(currentSong);
+                    } else {
+                    	pause();
                     }
                 }
                 Utilities.sleep(350);
@@ -241,9 +241,6 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             mPlayer = mAudioPlayerService.getPlayer();
             if (mPlayer.getPlayList() == null) {
 	            PlayList list = new PlayList();
-	            list.add(new Song("0", "blink", "Girl", "/mnt/sdcard/audio/girl.mp3"));
-	            list.add(new Song("1", "blink", "Happy Holidays", "/mnt/sdcard/audio/h.mp3"));
-	            list.restart();
 	            mPlayer.setPlayList(list);
             }
             startService(mAudioPlayerServiceIntent);

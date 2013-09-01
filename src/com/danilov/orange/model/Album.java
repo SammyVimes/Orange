@@ -1,5 +1,6 @@
 package com.danilov.orange.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Album {
@@ -17,6 +18,15 @@ public class Album {
 		mArtistName = artistName;
 		mSongs = songs;
 		mSongsCount = mSongs.size();
+	}
+	
+	public Album(final String albumId, final String albumName, 
+			final String artistName) {
+		mAlbumID = albumId;
+		mAlbumName = albumName;
+		mArtistName = artistName;
+		mSongs = new ArrayList<Song>();
+		mSongsCount = 0;
 	}
 	
 	public void addSong(final Song song) {
@@ -59,6 +69,11 @@ public class Album {
 	@Override
 	public String toString() {
 		return mArtistName + ": " + mAlbumName;
+	}
+	
+	public PlayList toPlayList() {
+		PlayList playList = new PlayList(getSongs());
+		return playList;
 	}
 	
 	

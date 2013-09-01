@@ -35,10 +35,13 @@ public class Player implements OnCompletionListener {
 	
 	public void setPlayList(final PlayList playList) {
 		mPlayList = playList;
-		mPlayList.restart();
 		mPaused = true;
-		mCurrentSong = mPlayList.getCurrentSong(); 
 		mMediaPlayer = new MediaPlayer();
+		if (mPlayList.isEmpty()) {
+			return;
+		}
+		mPlayList.restart();
+		mCurrentSong = mPlayList.getCurrentSong(); 
 		mMediaPlayer.setOnCompletionListener(this);
 		try {
 			mMediaPlayer.setDataSource(context, mPlayList.getCurrentSong().getPath());

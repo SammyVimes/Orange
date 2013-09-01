@@ -56,9 +56,9 @@ public class GridAdapter extends ArrayAdapter<Album> {
             // Album Id
             mData[i].mItemId = album.getAlbumID();
             // Album names (line one)
-            mData[i].mLineOne = album.getAlbumName();
+            mData[i].mLineOne = album.getArtistName();
             // Album artist names (line two)
-            mData[i].mLineTwo = album.getArtistName();
+            mData[i].mLineTwo = album.getAlbumName();
         }
     }
 	
