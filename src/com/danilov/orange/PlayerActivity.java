@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.danilov.orange.model.PlayList;
 import com.danilov.orange.model.Song;
 import com.danilov.orange.task.CacheCreateTask;
@@ -111,6 +112,18 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.player, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = new Intent();
+		switch(item.getItemId()){
+			case R.id.menu_choose_playlist:
+				intent = new Intent(this, PlaylistPickerActivity.class);
+				this.startActivity(intent);
+				break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	private void updatePlayPanel(final Song song) {
@@ -294,8 +307,8 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	            updatePlayPauseButtonState();
 	            break;
 	        case R.id.btnLeft:
-	            Intent intent = new Intent(this, PlaylistPickerActivity.class);
-	            startActivity(intent);
+	        	previousSong();
+	        	updatePlayPauseButtonState();
 	            break;
         }
 	}

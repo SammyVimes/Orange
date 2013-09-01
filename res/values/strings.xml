@@ -4,5 +4,6 @@
     <string name="app_name">Orange</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello music!</string>
-
+	<string name="choose_playlist">Choose playlist</string>
+    
 </resources>

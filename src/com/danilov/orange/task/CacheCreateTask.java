@@ -3,7 +3,9 @@ package com.danilov.orange.task;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.danilov.orange.OrangeApplication;
 import com.danilov.orange.interfaces.ITaskCallback;
+import com.danilov.orange.model.Album;
 import com.danilov.orange.model.Song;
 import com.danilov.orange.util.MusicSort;
 
@@ -27,7 +29,9 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	
 	@Override
 	protected Object doInBackground(Void... arg0) {
-		return MusicSort.sortByAlbums(getAllSongs());
+		List<Album> albums = MusicSort.sortByAlbums(getAllSongs());
+		OrangeApplication.getInstance().setAlbums(albums);
+		return albums;
 	}
 	
 	@Override

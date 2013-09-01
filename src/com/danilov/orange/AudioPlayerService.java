@@ -1,17 +1,16 @@
 package com.danilov.orange;
 
-import com.danilov.orange.util.IntentActions;
-
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.danilov.orange.model.Album;
+import com.danilov.orange.util.IntentActions;
 
 public class AudioPlayerService extends Service{
 	
@@ -49,6 +48,7 @@ public class AudioPlayerService extends Service{
         intentFilter.addAction(IntentActions.INTENT_NEXT_SONG);
         intentFilter.addAction(IntentActions.INTENT_PLAY_PAUSE);
         intentFilter.addAction(IntentActions.INTENT_PREVIOUS_SONG);
+        intentFilter.addAction(IntentActions.INTENT_SET_PLAYLIST);
         intentFilter.addAction(IntentActions.INTENT_SEEK);
         registerReceiver(broadcastReceiver, intentFilter);
         mPlayer = new Player(getApplicationContext(), new CompletionListener());
@@ -108,6 +108,14 @@ public class AudioPlayerService extends Service{
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
 	}
 	
+	private void setPlaylist(final int playlistNum) {
+		if (playlistNum == -1) {
+			return;
+		}
+		Album curAlbum = OrangeApplication.getInstance().getAlbums().get(playlistNum);
+		mPlayer.setPlayList(curAlbum.toPlayList());
+	}
+	
 	private class AudioPlayerBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -124,6 +132,9 @@ public class AudioPlayerService extends Service{
             } else if (IntentActions.INTENT_SEEK.equals(action)) {
             	int progress = intent.getIntExtra(IntentActions.INTENT_EXTRA_INTEGER_SEEK, 0);
             	seek(progress);
+            } else if (IntentActions.INTENT_SET_PLAYLIST.equals(action)) {
+            	int album = intent.getIntExtra(IntentActions.INTENT_EXTRA_INTEGER_ALBUM, -1);
+            	setPlaylist(album);
             }
         }
 

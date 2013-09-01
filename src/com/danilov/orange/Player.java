@@ -36,6 +36,7 @@ public class Player implements OnCompletionListener {
 	public void setPlayList(final PlayList playList) {
 		mPlayList = playList;
 		mPaused = true;
+		release();
 		mMediaPlayer = new MediaPlayer();
 		if (mPlayList.isEmpty()) {
 			return;

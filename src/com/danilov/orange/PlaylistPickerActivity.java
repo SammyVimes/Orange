@@ -91,8 +91,14 @@ public class PlaylistPickerActivity extends BasePlayerActivity {
 			mAdapter = new PagerAdapter(getSupportFragmentManager(), mFragments);
 			mPager.setAdapter(mAdapter);
 		}
-		CacheCreateTask tmp = new CacheCreateTask(this, new CacheTaskCallback());
-		tmp.execute();
+		List<Album> albums = OrangeApplication.getInstance().getAlbums();
+		if (albums == null) {
+			CacheCreateTask tmp = new CacheCreateTask(this, new CacheTaskCallback());
+			tmp.execute();
+		} else {
+			AlbumPickerFragment albumPickerFragment = getAlbumPickerFragment();
+			albumPickerFragment.setAlbums(albums);
+		}
 	}
 	
 	public class FragmentCreatedCallback implements IFragmentCreateCallback {
