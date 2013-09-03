@@ -80,7 +80,7 @@ public class Player implements OnCompletionListener {
 	}
 	
 	public void previousSong() {
-		mCurrentSong = mPlayList.next();
+		mCurrentSong = mPlayList.previous();
 		play(true);
 	}
 	

@@ -33,6 +33,15 @@ public class PlayList {
 		return mCurrentSong;
 	}
 	
+	public Song previous() {
+		currentSongPosition--;
+		if (currentSongPosition < 0) {
+			currentSongPosition = playList.size() - 1; 
+		}
+		mCurrentSong = playList.get(currentSongPosition);
+		return mCurrentSong;
+	}
+	
 	public void restart() {
 		currentSongPosition = 0;
 		if (!isEmpty()) {
