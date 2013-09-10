@@ -1,20 +1,27 @@
 package com.danilov.orange.task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import com.danilov.orange.OrangeApplication;
-import com.danilov.orange.interfaces.ITaskCallback;
-import com.danilov.orange.model.Album;
-import com.danilov.orange.model.Song;
-import com.danilov.orange.util.MusicSort;
+import java.util.Map;
 
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 
+import com.danilov.orange.OrangeApplication;
+import com.danilov.orange.interfaces.ITaskCallback;
+import com.danilov.orange.interfaces.Listable;
+import com.danilov.orange.model.Album;
+import com.danilov.orange.model.ArtistProperty;
+import com.danilov.orange.model.Song;
+import com.danilov.orange.util.MusicSort;
+
 public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
+	
+	public static final String ALBUMS = "ALBUMS";
+	public static final String ARTIST_PROPERTY = "ARTIST_PROPERTY";
 	
 	private ITaskCallback mCallback;
 	private Activity mActivity;
@@ -29,9 +36,15 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	
 	@Override
 	protected Object doInBackground(Void... arg0) {
-		List<Album> albums = MusicSort.sortByAlbums(getAllSongs());
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Song> allSongs = getAllSongs();
+		List<Album> albums = MusicSort.sortByAlbums(allSongs);
+		List<ArtistProperty> artistProperty = MusicSort.sortByAuthors(allSongs);
 		OrangeApplication.getInstance().setAlbums(albums);
-		return albums;
+		OrangeApplication.getInstance().setArtistProperty(artistProperty);
+		map.put(ALBUMS, albums);
+		map.put(ARTIST_PROPERTY, artistProperty);
+		return map;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package com.danilov.orange.util;
 
+import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.util.MusicHolder.DataHolder;
 
@@ -11,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-public class GridAdapter extends ArrayAdapter<Album> {
+public class GridAdapter extends ArrayAdapter<Listable> {
 	
 	private static final int VIEW_TYPE_COUNT = 2;
     private final int mLayoutId;
@@ -49,16 +50,14 @@ public class GridAdapter extends ArrayAdapter<Album> {
         mData = new DataHolder[getCount()];
         for (int i = 0; i < getCount(); i++) {
             // Build the album
-            final Album album = getItem(i);
+            final Listable listable = getItem(i);
 
             // Build the data holder
             mData[i] = new DataHolder();
-            // Album Id
-            mData[i].mItemId = album.getAlbumID();
             // Album names (line one)
-            mData[i].mLineOne = album.getArtistName();
+            mData[i].mLineOne = listable.getFirstLine();
             // Album artist names (line two)
-            mData[i].mLineTwo = album.getAlbumName();
+            mData[i].mLineTwo = listable.getSecondLine();
         }
     }
 	

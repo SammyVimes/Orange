@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.danilov.orange.model.Album;
 import com.danilov.orange.model.Song;
-import com.danilov.orange.model.Unit;
+import com.danilov.orange.model.ArtistProperty;
 import com.danilov.orange.test.MockService;
 
 public class MusicSort {
@@ -19,12 +19,13 @@ public class MusicSort {
 			} else {
 				String albumName = song.getAlbum();
 				String artistName = song.getArtist();
+				/*TODO: do smth with IDs*/
 				album = new Album("tmp", albumName, artistName);
 				album.addSong(song);
 				albums.add(album);
 			}
 		}
-		return albums; // TODO: Implement sorting
+		return albums; 
 	}
 	
 	private static Album getAlbumWithTitle(final List<Album> albums, final String title) {
@@ -38,8 +39,31 @@ public class MusicSort {
 		return result;
 	}
 	
-	public static List<Unit> sortByAuthors(final List<Song> songs) {
-		return null;
+	private static ArtistProperty getArtistPropertyWithName(final List<ArtistProperty> artistProperties, final String name) {
+		ArtistProperty result = null;
+		for (ArtistProperty artistProperty : artistProperties) {
+			if (artistProperty.getAtristName().equalsIgnoreCase(name)) {
+				result = artistProperty;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	public static List<ArtistProperty> sortByAuthors(final List<Song> songs) {
+		List<ArtistProperty> artistProperty = new ArrayList<ArtistProperty>();
+		for (Song song : songs) {
+			ArtistProperty aProperty = getArtistPropertyWithName(artistProperty, song.getArtist());
+			if (aProperty != null) {
+				aProperty.addSong(song);
+			} else {
+				String artistName = song.getArtist();
+				aProperty = new ArtistProperty(artistName);
+				aProperty.addSong(song);
+				artistProperty.add(aProperty);
+			}
+		}
+		return artistProperty; 
 	}
 	
 }

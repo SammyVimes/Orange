@@ -3,7 +3,9 @@ package com.danilov.orange.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Album {
+import com.danilov.orange.interfaces.Listable;
+
+public class Album implements Listable {
 
 	private String mAlbumID;
 	private String mAlbumName = "";
@@ -74,6 +76,16 @@ public class Album {
 	public PlayList toPlayList() {
 		PlayList playList = new PlayList(getSongs());
 		return playList;
+	}
+
+	@Override
+	public String getFirstLine() {
+		return getArtistName();
+	}
+
+	@Override
+	public String getSecondLine() {
+		return getAlbumName();
 	}
 	
 	

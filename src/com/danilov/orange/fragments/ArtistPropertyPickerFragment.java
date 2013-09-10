@@ -13,13 +13,13 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.danilov.orange.PlaylistPickerActivity;
 import com.danilov.orange.model.Album;
+import com.danilov.orange.model.ArtistProperty;
 import com.danilov.orange.util.IntentActions;
 
-public class AlbumPickerFragment extends PageFragment {
-	
+public class ArtistPropertyPickerFragment extends PageFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d("AF", "onCreate");
+		Log.d("APPF", "onCreate");
 		super.onCreate(savedInstanceState);
 	}
 	
@@ -32,14 +32,14 @@ public class AlbumPickerFragment extends PageFragment {
 			mCallback = activity.getCallback();
 		}
 		mGridView.setOnItemClickListener(new MyItemClickListener());
-		this.setType(ALBUM_FRAGMENT_TYPE);
+		this.setType(ARTIST_PROPERTY_FRAGMENT_TYPE);
 		mCallback.onFragmentCreated(this);
 		return view;
 	}
 	
-	public void setAlbums(final List<Album> albums) {
-		for (Album album : albums) {
-			mAdapter.add(album);
+	public void setArtistProperty (final List<ArtistProperty> artistProperties) {
+		for (ArtistProperty artistProperty : artistProperties) {
+			mAdapter.add(artistProperty);
 		}
 		mAdapter.notifyDataSetChanged();
 		mAdapter.buildCache();
@@ -53,7 +53,7 @@ public class AlbumPickerFragment extends PageFragment {
 				long id) {
 			Intent intent = new Intent();
 			intent.setAction(IntentActions.INTENT_SET_PLAYLIST);
-			intent.putExtra(IntentActions.INTENT_EXTRA_INTEGER_ALBUM, position);
+			intent.putExtra(IntentActions.INTENT_EXTRA_INTEGER_ARTIST_PROPERTY, position);
 			getActivity().sendBroadcast(intent);
 			getActivity().finish();
 		}

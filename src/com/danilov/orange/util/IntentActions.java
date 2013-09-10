@@ -10,6 +10,7 @@ public class IntentActions {
 	public static String INTENT_FROM_SERVICE_PLAY_PAUSE = "FROM_SERVICE_PLAY_PAUSE";
 	
 	public static String INTENT_EXTRA_INTEGER_SEEK = "INTEGER_SEEK";
+	public static String INTENT_EXTRA_INTEGER_ARTIST_PROPERTY= "INTEGER_ARTIST_PROPERTY";
 	public static String INTENT_EXTRA_INTEGER_ALBUM = "INTEGER_ALBUM";
 		
 }

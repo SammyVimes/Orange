@@ -25,7 +25,7 @@ import com.danilov.orange.util.GridAdapter;
 public class PageFragment extends SherlockFragment {
 	
   public static final int ALBUM_FRAGMENT_TYPE = 0;
-  public static final int ARTIST_FRAGMENT_TYPE = 1;
+  public static final int ARTIST_PROPERTY_FRAGMENT_TYPE = 1;
   public static final int ALL_SONGS_FRAGMENT_TYPE = 2;
   public int mType;
   
@@ -41,8 +41,8 @@ public class PageFragment extends SherlockFragment {
 	case ALBUM_FRAGMENT_TYPE:
 		fragment = new AlbumPickerFragment();
 		break;
-	case ARTIST_FRAGMENT_TYPE:
-			
+	case ARTIST_PROPERTY_FRAGMENT_TYPE:
+		fragment = new ArtistPropertyPickerFragment();	
 		break;
 	case ALL_SONGS_FRAGMENT_TYPE:
 		
@@ -82,7 +82,7 @@ public class PageFragment extends SherlockFragment {
 	    return view;
     }
   
-	public void setType(final int type) {
+	protected void setType(final int type) {
 		mType = type;
 	}
 	
