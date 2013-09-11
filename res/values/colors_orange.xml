@@ -18,7 +18,7 @@
 -->
 
 <resources>
-    <color name="pressed_orange">#CCF28025</color>
+    <color name="pressed_orange">#bfbaa9</color>
     <color name="orange">#FA6B02</color>
     <color name="white">#ffffff</color>
 </resources>

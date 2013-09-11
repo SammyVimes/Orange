@@ -1,6 +1,9 @@
 package com.danilov.orange.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.danilov.orange.model.Album;
@@ -25,7 +28,26 @@ public class MusicSort {
 				albums.add(album);
 			}
 		}
+		Collections.sort(albums, new AlbumComparator());
 		return albums; 
+	}
+	
+	static class AlbumComparator implements Comparator<Album> {
+
+		@Override
+		public int compare(Album first, Album second) {
+			String str1 = first.getArtistName();
+			String str2 = second.getArtistName();
+			int res = 0;
+			int compRes = str1.compareToIgnoreCase(str2);
+			if (compRes > 0) {
+				res = 1;
+			} else if (compRes < 0) {
+				res = -1;
+			}
+			return res;
+		}
+		
 	}
 	
 	private static Album getAlbumWithTitle(final List<Album> albums, final String title) {

@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.View;
+import android.widget.Button;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -58,9 +60,19 @@ public class PlaylistPickerActivity extends BasePlayerActivity {
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		MyTabListener tabListener = new MyTabListener();
 	    for (int i = 0; i < 2; i++) {
-	        actionBar.addTab(actionBar.newTab()
-	                        .setText("Tab " + (i + 1))
-	                        .setTabListener(tabListener));
+	    	Tab tab = actionBar.newTab();
+	    	tab.setTabListener(tabListener);
+	    	switch (i) {
+			case 0:
+				tab.setText("Albums");
+				break;
+			case 1:
+				tab.setText("Artists");
+				break;
+			default:
+				break;
+			}
+	        actionBar.addTab(tab);
 	    }
 	}
 
