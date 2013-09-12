@@ -55,6 +55,8 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	@Override
 	protected void onPostExecute(Object result) {
 		mCallback.onTaskComplete(result);
+		ImageFetcher.setAlbums((List<Album>)(((Map)result).get(ALBUMS)));
+		ImageFetcher.getInstance().fetch();
     }
 	
 	

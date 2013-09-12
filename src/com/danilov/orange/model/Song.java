@@ -4,6 +4,9 @@ import android.net.Uri;
 
 public class Song {
 	
+	private static String NO_ARTIST = "no_artist";
+	private static String MISC = "misc";
+	
 	private String mId;
 	private String mTitle;
 	private String mPath;
@@ -13,6 +16,9 @@ public class Song {
 	public Song(final String id, final String artist, final String title, final String path) {
 		this.mId = id;
 		this.mArtist = artist;
+		if (this.mArtist == null) {
+			this.mArtist = NO_ARTIST;
+		}
 		this.mTitle = title;
 		this.mPath = path;
 	}
@@ -31,6 +37,9 @@ public class Song {
 	
 	public void setAlbum(final String album) {
 		this.mAlbum = album;
+		if (this.mAlbum == null) {
+			this.mAlbum = MISC;
+		}
 	}
 
 	public String getTitle() {

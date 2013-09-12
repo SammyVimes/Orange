@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +19,7 @@ import com.danilov.orange.fragments.AlbumPickerFragment;
 import com.danilov.orange.fragments.ArtistPropertyPickerFragment;
 import com.danilov.orange.fragments.PageFragment;
 import com.danilov.orange.interfaces.IFragmentCreateCallback;
+import com.danilov.orange.interfaces.IImageFetcherCallback;
 import com.danilov.orange.interfaces.ITaskCallback;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.model.ArtistProperty;
