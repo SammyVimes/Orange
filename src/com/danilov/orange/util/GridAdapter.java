@@ -21,11 +21,13 @@ public class GridAdapter extends ArrayAdapter<Listable> {
 	private static final int VIEW_TYPE_COUNT = 2;
     private final int mLayoutId;
     private DataHolder[] mData;
+    private BitmapHandler mHandler;
     
 	public GridAdapter(final Context context, final int layoutId) {
         super(context, 0);
         // Get the layout Id
         mLayoutId = layoutId;
+        mHandler = new BitmapHandler();
     }
 	
 	@Override
@@ -48,11 +50,9 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         // Set the artist name (line two)
         holder.mLineTwo.get().setText(dataHolder.mLineTwo);
         Listable l = getItem(position); 
-        String clazz = l.getClass().getCanonicalName();
         if (l.getClass().getCanonicalName().contains("Album")) {
-        	Album a = (Album) getItem(position);
-            BitmapHandler h = new BitmapHandler(dataHolder, holder);
-            Bitmap bitmap = ImageFetcher.getInstance().getBitmap(a, new ImageFetcherCallback(a, h));
+        	Album album = (Album) getItem(position);
+            Bitmap bitmap = ImageFetcher.getInstance().getBitmap(album, new ImageFetcherCallback(album, dataHolder, holder));
             if (bitmap != null) {
             	holder.mImage.get().setImageBitmap(bitmap);
             }
@@ -74,40 +74,45 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         }
     }
 	
-	public class BitmapHandler extends Handler {
+	public static class BitmapHandler extends Handler {
 		
-		private DataHolder mDataHolder;
-		private MusicHolder mMusicHolder;
 		
-		public BitmapHandler(final DataHolder dataHolder,
-				final MusicHolder musicHolder) {
-			mDataHolder = dataHolder;
-			mMusicHolder = musicHolder;
+		public BitmapHandler() {
 		}
 		
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			Bitmap bitmap = (Bitmap) msg.obj;
-			mDataHolder.mImage = bitmap;
-			mMusicHolder.mImage.get().setImageBitmap(bitmap);
+			ImageFetcherCallback callback = (ImageFetcherCallback) msg.obj;
+			callback.setImage();
 		}
 		
 	}
 	
 	public class ImageFetcherCallback implements IImageFetcherCallback {
 
-		private BitmapHandler mHandler;
 		private Album mAlbum;
+		private DataHolder mDataHolder;
+		private MusicHolder mMusicHolder;
+		private Bitmap mBitmap;
 		
-		public ImageFetcherCallback(final Album album, final BitmapHandler handler) {
+		public ImageFetcherCallback(final Album album,
+									final DataHolder dataHolder,
+									final MusicHolder musicHolder) {
+			mDataHolder = dataHolder;
+			mMusicHolder = musicHolder;
 			mAlbum = album;
-			mHandler = handler;
 		}
 
 		@Override
 		public void onImageFetched(final Bitmap bitmap) {
-			mHandler.sendMessage(mHandler.obtainMessage(0, bitmap));
+			mBitmap = bitmap;
+			mHandler.sendMessage(mHandler.obtainMessage(0, this));
+		}
+		
+		public void setImage() {
+			mDataHolder.mImage = mBitmap;
+			mMusicHolder.mImage.get().setImageBitmap(mBitmap);
 		}
 
 		public Album getAlbum() {

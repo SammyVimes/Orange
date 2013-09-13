@@ -52,7 +52,7 @@ public class AlbumPickerFragment extends PageFragment {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			Intent intent = new Intent();
-			intent.setAction(IntentActions.INTENT_SET_PLAYLIST);
+			intent.setAction(IntentActions.INTENT_SET_PLAYLIST_FROM_ALBUM);
 			intent.putExtra(IntentActions.INTENT_EXTRA_INTEGER_ALBUM, position);
 			getActivity().sendBroadcast(intent);
 			getActivity().finish();

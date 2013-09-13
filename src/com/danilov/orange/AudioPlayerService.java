@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.danilov.orange.model.Album;
+import com.danilov.orange.model.ArtistProperty;
 import com.danilov.orange.util.IntentActions;
 
 public class AudioPlayerService extends Service{
@@ -48,7 +49,8 @@ public class AudioPlayerService extends Service{
         intentFilter.addAction(IntentActions.INTENT_NEXT_SONG);
         intentFilter.addAction(IntentActions.INTENT_PLAY_PAUSE);
         intentFilter.addAction(IntentActions.INTENT_PREVIOUS_SONG);
-        intentFilter.addAction(IntentActions.INTENT_SET_PLAYLIST);
+        intentFilter.addAction(IntentActions.INTENT_SET_PLAYLIST_FROM_ALBUM);
+        intentFilter.addAction(IntentActions.INTENT_SET_PLAYLIST_FROM_ARTIST_PROPERTY);
         intentFilter.addAction(IntentActions.INTENT_SEEK);
         registerReceiver(broadcastReceiver, intentFilter);
         mPlayer = new Player(getApplicationContext(), new CompletionListener());
@@ -108,12 +110,20 @@ public class AudioPlayerService extends Service{
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
 	}
 	
-	private void setPlaylist(final int playlistNum) {
+	private void setPlaylistFromAlbum(final int playlistNum) {
 		if (playlistNum == -1) {
 			return;
 		}
 		Album curAlbum = OrangeApplication.getInstance().getAlbums().get(playlistNum);
 		mPlayer.setPlayList(curAlbum.toPlayList());
+	}
+	
+	private void setPlaylistFromArtistProperty(final int playlistNum) {
+		if (playlistNum == -1) {
+			return;
+		}
+		ArtistProperty curArtistProperty = OrangeApplication.getInstance().getArtistProperty().get(playlistNum);
+		mPlayer.setPlayList(curArtistProperty.toPlayList());	
 	}
 	
 	private class AudioPlayerBroadcastReceiver extends BroadcastReceiver {
@@ -132,9 +142,12 @@ public class AudioPlayerService extends Service{
             } else if (IntentActions.INTENT_SEEK.equals(action)) {
             	int progress = intent.getIntExtra(IntentActions.INTENT_EXTRA_INTEGER_SEEK, 0);
             	seek(progress);
-            } else if (IntentActions.INTENT_SET_PLAYLIST.equals(action)) {
+            } else if (IntentActions.INTENT_SET_PLAYLIST_FROM_ALBUM.equals(action)) {
             	int album = intent.getIntExtra(IntentActions.INTENT_EXTRA_INTEGER_ALBUM, -1);
-            	setPlaylist(album);
+            	setPlaylistFromAlbum(album);
+            } else if (IntentActions.INTENT_SET_PLAYLIST_FROM_ARTIST_PROPERTY.equals(action)) {
+            	int album = intent.getIntExtra(IntentActions.INTENT_EXTRA_INTEGER_ARTIST_PROPERTY, -1);
+            	setPlaylistFromArtistProperty(album);
             }
         }
 

@@ -1224,10 +1224,15 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f090007;
-        public static final int action_settings=0x7f09000e;
+        public static final int action_settings=0x7f090010;
+        public static final int albums=0x7f090011;
         public static final int app_name=0x7f09000d;
-        public static final int choose_playlist=0x7f090010;
-        public static final int hello_world=0x7f09000f;
+        public static final int artists=0x7f090012;
+        /**  LOCALIZATION GOES HERE 
+ LOCALIZATION GOES HERE 
+         */
+        public static final int choose_playlist=0x7f09000f;
+        public static final int hello_world=0x7f09000e;
     }
     public static final class style {
         public static final int ActionBar_Solid_Abridged=0x7f0a005a;

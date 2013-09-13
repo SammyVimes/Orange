@@ -38,6 +38,10 @@ public class ArtistProperty implements Listable{
 		mSongsCount = mSongs.size();
 	}
 	
+	public List<Song> getSongs() {
+		return mSongs;
+	}
+	
 	public void addSong(final Song song) {
 		mSongs.add(song);
 		mSongsCount = mSongs.size();
@@ -51,6 +55,11 @@ public class ArtistProperty implements Listable{
 	@Override
 	public String getSecondLine() {
 		return Integer.toString(getSongsCount());
+	}
+	
+	public PlayList toPlayList() {
+		PlayList playList = new PlayList(getSongs());
+		return playList;
 	}
 	
 	

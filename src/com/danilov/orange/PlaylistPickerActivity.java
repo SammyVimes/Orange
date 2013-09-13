@@ -66,10 +66,10 @@ public class PlaylistPickerActivity extends BasePlayerActivity {
 	    	tab.setTabListener(tabListener);
 	    	switch (i) {
 			case 0:
-				tab.setText("Albums");
+				tab.setText(getResources().getString(R.string.albums));
 				break;
 			case 1:
-				tab.setText("Artists");
+				tab.setText(getResources().getString(R.string.artists));
 				break;
 			default:
 				break;
