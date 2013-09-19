@@ -1,20 +1,20 @@
 package com.danilov.orange.util;
 
-import com.danilov.orange.interfaces.IImageFetcherCallback;
-import com.danilov.orange.interfaces.Listable;
-import com.danilov.orange.model.Album;
-import com.danilov.orange.task.ImageFetcher;
-import com.danilov.orange.util.MusicHolder.DataHolder;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+
+import com.danilov.orange.interfaces.IImageFetcherCallback;
+import com.danilov.orange.interfaces.Listable;
+import com.danilov.orange.model.Album;
+import com.danilov.orange.task.ImageFetcher;
+import com.danilov.orange.util.MusicHolder.DataHolder;
 
 public class GridAdapter extends ArrayAdapter<Listable> {
 	
@@ -22,6 +22,7 @@ public class GridAdapter extends ArrayAdapter<Listable> {
     private final int mLayoutId;
     private DataHolder[] mData;
     private BitmapHandler mHandler;
+    private boolean[] hasCallback;
     
 	public GridAdapter(final Context context, final int layoutId) {
         super(context, 0);
@@ -34,6 +35,8 @@ public class GridAdapter extends ArrayAdapter<Listable> {
     public View getView(final int position, View convertView, final ViewGroup parent) {
         // Recycle ViewHolder's items
         MusicHolder holder;
+        // Retrieve the data holder
+        final DataHolder dataHolder = mData[position];
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(mLayoutId, parent, false);
             holder = new MusicHolder(convertView);
@@ -41,26 +44,31 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         } else {
             holder = (MusicHolder)convertView.getTag();
         }
-
-        // Retrieve the data holder
-        final DataHolder dataHolder = mData[position];
-
         // Set each album name (line one)
         holder.mLineOne.get().setText(dataHolder.mLineOne);
         // Set the artist name (line two)
         holder.mLineTwo.get().setText(dataHolder.mLineTwo);
+		holder.mImage.get().setImageBitmap(dataHolder.mImage);
         Listable l = getItem(position); 
         if (l.getClass().getCanonicalName().contains("Album")) {
         	Album album = (Album) getItem(position);
-            Bitmap bitmap = ImageFetcher.getInstance().getBitmap(album, new ImageFetcherCallback(album, dataHolder, holder));
-            if (bitmap != null) {
-            	holder.mImage.get().setImageBitmap(bitmap);
-            }
+        	if (!hasCallback[position]) {
+        		hasCallback[position] = true;
+	            Bitmap bitmap = ImageFetcher.getInstance().getBitmap(album, new ImageFetcherCallback(album, dataHolder, holder));
+	            if (bitmap != null) {
+	            	dataHolder.mImage = bitmap;
+	            	holder.mImage.get().setImageBitmap(bitmap);
+	            }
+        	}
         }
         return convertView;
     }
 	
 	public void buildCache() {
+		hasCallback = new boolean[getCount()];
+		for (int i = 0; i < hasCallback.length; i++) {
+			hasCallback[i] = false;
+		}
         mData = new DataHolder[getCount()];
         for (int i = 0; i < getCount(); i++) {
             // Build the album
@@ -112,7 +120,10 @@ public class GridAdapter extends ArrayAdapter<Listable> {
 		
 		public void setImage() {
 			mDataHolder.mImage = mBitmap;
-			mMusicHolder.mImage.get().setImageBitmap(mBitmap);
+			ImageView iv = mMusicHolder.mImage.get(); 
+			if (iv != null) {
+				iv.setImageBitmap(mBitmap);
+			}
 		}
 
 		public Album getAlbum() {

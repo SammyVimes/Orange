@@ -37,6 +37,15 @@ public class ImageFetcher {
 		return mInstance;
 	}
 	
+	public static void deleteInstance() {
+		mInstance = null;
+	}
+	
+	public void freeBitmaps() {
+		mBitmapMap = null;
+		mAlbums = null;
+	}
+	
 	/*CALL IT FIRST*/
 	public static void setAlbums(final List<Album> albums) {
 		mAlbums = albums;
@@ -91,6 +100,7 @@ public class ImageFetcher {
 					ImageFetcherCallback cb = (ImageFetcherCallback) callback;
 					callback.onImageFetched(mBitmapMap.get(cb.getAlbum()));
 				}
+				mCallbacksList.clear();
 			}
 	    }
 	}

@@ -1,5 +1,7 @@
 package com.danilov.orange;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9,7 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.IntentSender.SendIntentException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -25,7 +30,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.danilov.orange.model.PlayList;
 import com.danilov.orange.model.Song;
-import com.danilov.orange.task.CacheCreateTask;
+import com.danilov.orange.task.ImageFetcher;
 import com.danilov.orange.util.BasePlayerActivity;
 import com.danilov.orange.util.IntentActions;
 import com.danilov.orange.util.Utilities;
@@ -39,12 +44,15 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	private UpdateCurrentTrackTask updateCurrentTrackTask;
 	private Player mPlayer;
 	
+	private Song mCurrentSong;
+	
     private Timer waitForAudioPlayertimer;
 	private Handler handler = new Handler();
     
 	private ImageButton btnPlayPause;
 	private ImageButton btnRight;
 	private ImageButton btnLeft;
+	private ImageView albumCover;
 	private TextView time;
 	private TextView songTitle;
 	private SeekBar timeLine;
@@ -67,6 +75,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		btnPlayPause = (ImageButton) findViewById(R.id.btnPlayPause);
 		btnRight = (ImageButton) findViewById(R.id.btnRight);
 		btnLeft = (ImageButton) findViewById(R.id.btnLeft);
+		albumCover = (ImageView) findViewById(R.id.albumCover);
 		time = (TextView) findViewById(R.id.time);
 		songTitle = (TextView) findViewById(R.id.songTitle);
 		timeLine = (SeekBar) findViewById(R.id.timeLine);
@@ -89,6 +98,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         waitForAudioPlayertimer = new Timer();
     	audioPlayerBroadcastReceiver = new AudioPlayerBroadcastReceiver();
         IntentFilter filter = new IntentFilter(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
+        filter.addAction(IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED);
         registerReceiver(audioPlayerBroadcastReceiver, filter );
         refreshScreen();
     }
@@ -106,6 +116,15 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         unbindService(serviceConnection);
         super.onPause();
     }
+	
+	@Override
+	protected void onDestroy() {
+		OrangeApplication app = OrangeApplication.getInstance();
+		app.setAlbums(null);
+		app.setArtistProperty(null);
+		ImageFetcher.deleteInstance();
+		super.onDestroy();
+	}
 	
 
 	@Override
@@ -225,6 +244,10 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         	if (!mPlayer.isPlaying()) {
         		pause();
         	}
+        	if (song[0] != mCurrentSong) {
+        		mCurrentSong = song[0];
+        		updateAlbumCover();
+        	}
             updatePlayPanel(song[0]);
         }
 
@@ -280,11 +303,27 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG,"AudioPlayerBroadCastReceiver.onReceive action=" + intent.getAction());
-            if(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE.equals( intent.getAction())) {
+            if (IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE.equals(intent.getAction())) {
                 updatePlayPauseButtonState();
+            } else if (IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED.equals(intent.getAction())) {
+            	updatePlayPauseButtonState();
+            	updateAlbumCover();
             }
         }
     }
+	
+	public void updateAlbumCover() {
+		Song curSong = mPlayer.getCurrentSong();
+		Bitmap bitmap = null;
+		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+	    mmr.setDataSource(curSong.getPath().toString());
+	    byte[] artBytes =  mmr.getEmbeddedPicture();
+	    if(artBytes != null) {
+	        InputStream is = new ByteArrayInputStream(mmr.getEmbeddedPicture());
+	        bitmap = BitmapFactory.decodeStream(is);
+	    }
+	    albumCover.setImageBitmap(bitmap);
+	}
 	
 
 	 private void onClickPlayPause() {

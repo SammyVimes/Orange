@@ -1077,7 +1077,7 @@ containing a value of this type.
         public static final int textfield_focused_holo_light=0x7f020110;
     }
     public static final class id {
-        public static final int RelativeLayout1=0x7f04003c;
+        public static final int RelativeLayout1=0x7f04003d;
         public static final int abs__action_bar=0x7f040020;
         public static final int abs__action_bar_container=0x7f04001f;
         public static final int abs__action_bar_subtitle=0x7f040011;
@@ -1117,33 +1117,34 @@ containing a value of this type.
         public static final int abs__textButton=0x7f040013;
         public static final int abs__title=0x7f04001b;
         public static final int abs__up=0x7f04000b;
-        public static final int action_settings=0x7f040044;
-        public static final int btnLeft=0x7f040037;
-        public static final int btnPlayPause=0x7f040038;
-        public static final int btnRight=0x7f040039;
+        public static final int action_settings=0x7f040045;
+        public static final int albumCover=0x7f040036;
+        public static final int btnLeft=0x7f040038;
+        public static final int btnPlayPause=0x7f040039;
+        public static final int btnRight=0x7f04003a;
         public static final int disableHome=0x7f040009;
         public static final int edit_query=0x7f040026;
-        public static final int grid_base=0x7f04003d;
+        public static final int grid_base=0x7f04003e;
         public static final int homeAsUp=0x7f040006;
-        public static final int image=0x7f040042;
-        public static final int line_one=0x7f04003f;
-        public static final int line_two=0x7f040040;
+        public static final int image=0x7f040043;
+        public static final int line_one=0x7f040040;
+        public static final int line_two=0x7f040041;
         public static final int listMode=0x7f040002;
-        public static final int menu_choose_playlist=0x7f040043;
+        public static final int menu_choose_playlist=0x7f040044;
         public static final int normal=0x7f040001;
-        public static final int pager=0x7f04003b;
-        public static final int player_footer_bg=0x7f040036;
+        public static final int pager=0x7f04003c;
+        public static final int player_footer_bg=0x7f040037;
         public static final int player_header_bg=0x7f040032;
-        public static final int progressBar=0x7f04003e;
+        public static final int progressBar=0x7f04003f;
         public static final int showCustom=0x7f040008;
         public static final int showHome=0x7f040005;
         public static final int showTitle=0x7f040007;
         public static final int songThumbnail=0x7f040035;
         public static final int songTitle=0x7f040033;
-        public static final int square_view=0x7f040041;
+        public static final int square_view=0x7f040042;
         public static final int tabMode=0x7f040003;
         public static final int time=0x7f040034;
-        public static final int timeLine=0x7f04003a;
+        public static final int timeLine=0x7f04003b;
         public static final int useLogo=0x7f040004;
         public static final int wrap_content=0x7f040000;
     }

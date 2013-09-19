@@ -99,7 +99,7 @@ public class AudioPlayerService extends Service{
 			return;
 		}
 		mPlayer.nextSong();
-		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
+		sendIntent(IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED);
 	}
 	
 	private void previousSong() {
@@ -107,7 +107,7 @@ public class AudioPlayerService extends Service{
 			return;
 		}
 		mPlayer.previousSong();
-		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
+		sendIntent(IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED);
 	}
 	
 	private void setPlaylistFromAlbum(final int playlistNum) {
@@ -116,6 +116,7 @@ public class AudioPlayerService extends Service{
 		}
 		Album curAlbum = OrangeApplication.getInstance().getAlbums().get(playlistNum);
 		mPlayer.setPlayList(curAlbum.toPlayList());
+		sendIntent(IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED);
 	}
 	
 	private void setPlaylistFromArtistProperty(final int playlistNum) {
