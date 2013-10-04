@@ -1,6 +1,8 @@
 package com.danilov.orange.task;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +57,12 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	@Override
 	protected void onPostExecute(Object result) {
 		mCallback.onTaskComplete(result);
-		ImageFetcher.setAlbums((List<Album>)(((Map)result).get(ALBUMS)));
+		List<Listable> albums = (List<Listable>)(((Map)result).get(ALBUMS));
+		List<Listable> artistProperty = (List<Listable>)(((Map)result).get(ARTIST_PROPERTY));
+		List<Listable> listables = new ArrayList<Listable>();
+		Collections.copy(listables, albums);
+		listables.addAll(artistProperty);
+		ImageFetcher.setProperty(listables);
 		ImageFetcher.getInstance().fetch();
     }
 	

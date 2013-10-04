@@ -49,18 +49,15 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         // Set the artist name (line two)
         holder.mLineTwo.get().setText(dataHolder.mLineTwo);
 		holder.mImage.get().setImageBitmap(dataHolder.mImage);
-        Listable l = getItem(position); 
-        if (l.getClass().getCanonicalName().contains("Album")) {
-        	Album album = (Album) getItem(position);
-        	if (!hasCallback[position]) {
-        		hasCallback[position] = true;
-	            Bitmap bitmap = ImageFetcher.getInstance().getBitmap(album, new ImageFetcherCallback(album, dataHolder, holder));
-	            if (bitmap != null) {
-	            	dataHolder.mImage = bitmap;
-	            	holder.mImage.get().setImageBitmap(bitmap);
-	            }
-        	}
-        }
+        Listable listable = getItem(position); 
+        if (!hasCallback[position]) {
+    		hasCallback[position] = true;
+            Bitmap bitmap = ImageFetcher.getInstance().getBitmap(listable, new ImageFetcherCallback(listable, dataHolder, holder));
+            if (bitmap != null) {
+            	dataHolder.mImage = bitmap;
+            	holder.mImage.get().setImageBitmap(bitmap);
+            }
+    	}
         return convertView;
     }
 	
@@ -99,17 +96,17 @@ public class GridAdapter extends ArrayAdapter<Listable> {
 	
 	public class ImageFetcherCallback implements IImageFetcherCallback {
 
-		private Album mAlbum;
+		private Listable mListable;
 		private DataHolder mDataHolder;
 		private MusicHolder mMusicHolder;
 		private Bitmap mBitmap;
 		
-		public ImageFetcherCallback(final Album album,
+		public ImageFetcherCallback(final Listable listable,
 									final DataHolder dataHolder,
 									final MusicHolder musicHolder) {
 			mDataHolder = dataHolder;
 			mMusicHolder = musicHolder;
-			mAlbum = album;
+			mListable = listable;
 		}
 
 		@Override
@@ -126,8 +123,8 @@ public class GridAdapter extends ArrayAdapter<Listable> {
 			}
 		}
 
-		public Album getAlbum() {
-			return mAlbum;
+		public Listable getListable() {
+			return mListable;
 		}
 		
 	}

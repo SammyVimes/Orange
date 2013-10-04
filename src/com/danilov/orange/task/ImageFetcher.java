@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.danilov.orange.interfaces.IImageFetcherCallback;
+import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.model.Song;
 import com.danilov.orange.util.GridAdapter.ImageFetcherCallback;
@@ -22,12 +23,12 @@ import com.danilov.orange.util.GridAdapter.ImageFetcherCallback;
 public class ImageFetcher {
 	
 	private volatile List<IImageFetcherCallback> mCallbacksList = new LinkedList<IImageFetcherCallback>();
-	private Map<Album, Bitmap> mBitmapMap = new HashMap<Album, Bitmap>();
-	private static List<Album> mAlbums = null;
+	private Map<Listable, Bitmap> mBitmapMap = new HashMap<Listable, Bitmap>();
+	private static List<Listable> mProperty = null;
 	private static ImageFetcher mInstance;
 	
 	public static ImageFetcher getInstance() {
-		if (mAlbums == null) {
+		if (mProperty == null) {
 			Log.d("ImageFetcher", "Tried to get instance with mAlbums not set");
 			return null;
 		}
@@ -43,12 +44,12 @@ public class ImageFetcher {
 	
 	public void freeBitmaps() {
 		mBitmapMap = null;
-		mAlbums = null;
+		mProperty = null;
 	}
 	
 	/*CALL IT FIRST*/
-	public static void setAlbums(final List<Album> albums) {
-		mAlbums = albums;
+	public static void setProperty(final List<Listable> listables) {
+		mProperty = listables;
 	}
 	
 	private ImageFetcher() {
@@ -59,10 +60,10 @@ public class ImageFetcher {
 		task.execute();
 	}
 	
-	public Bitmap getBitmap(final Album album, final IImageFetcherCallback callback) {
+	public Bitmap getBitmap(final Listable listable, final IImageFetcherCallback callback) {
 		Bitmap bitmap = null;
 		synchronized (mCallbacksList) {
-			bitmap = mBitmapMap.get(album);
+			bitmap = mBitmapMap.get(listable);
 			if (bitmap == null) {
 				addCallback(callback);
 			}
@@ -79,15 +80,15 @@ public class ImageFetcher {
 		@SuppressLint("NewApi")
 		@Override
 		protected Void doInBackground(Void... params) {
-			for (Album album : mAlbums) {
+			for (Listable listable : mProperty) {
 				MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-				Song s = album.getSongs().get(0);
+				Song s = listable.getSongs().get(0);
 			    mmr.setDataSource(s.getPath().toString());
 			    byte[] artBytes =  mmr.getEmbeddedPicture();
 			    if(artBytes != null) {
 			        InputStream is = new ByteArrayInputStream(mmr.getEmbeddedPicture());
 			        Bitmap bm = BitmapFactory.decodeStream(is);
-			        mBitmapMap.put(album, bm);
+			        mBitmapMap.put(listable, bm);
 			    }
 			}
 			return null;
@@ -98,8 +99,9 @@ public class ImageFetcher {
 			synchronized (mCallbacksList) {
 				for (IImageFetcherCallback callback : mCallbacksList) {
 					ImageFetcherCallback cb = (ImageFetcherCallback) callback;
-					callback.onImageFetched(mBitmapMap.get(cb.getAlbum()));
+					callback.onImageFetched(mBitmapMap.get(cb.getListable()));
 				}
+				mProperty = null;
 				mCallbacksList.clear();
 			}
 	    }
