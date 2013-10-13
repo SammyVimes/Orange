@@ -42,19 +42,13 @@ public class ImageFetcher extends AsyncTask<Listable, Void, Bitmap>{
 	@Override
     protected void onPostExecute(Bitmap bitmap) {
 		if (isCancelled()) {
-            bitmap = null;
+            return;
         }
 		
         if (imageViewReference != null && bitmap != null) {
             final ImageView imageView = imageViewReference.get();
-            /*Check if we got reused ImageView, that is now used for 
-             * another purpose
-             * */
             if (imageView != null) {
-                Listable listable = (Listable) imageView.getTag();
-                if (listable == mListable) {
-                	imageView.setImageBitmap(bitmap);
-                }
+            	imageView.setImageBitmap(bitmap);
             }
         }
     }
