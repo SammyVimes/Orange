@@ -49,11 +49,6 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         // Set the artist name (line two)
         holder.mLineTwo.get().setText(dataHolder.mLineTwo);
         Listable listable = getItem(position); 
-        /*Doing this to avoid setting image for reused image view after task complete
-         * for example: we started task, but scrolled from that ImageView and this ImageView
-         * being reused and filled from cache. When task ends it would be filled with the wrong image
-         */
-        holder.mImage.get().setTag(listable);
         loadBitmap(listable, holder.mImage.get());
         return convertView;
     }
