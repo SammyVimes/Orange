@@ -60,10 +60,8 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 		List<Listable> albums = (List<Listable>)(((Map)result).get(ALBUMS));
 		List<Listable> artistProperty = (List<Listable>)(((Map)result).get(ARTIST_PROPERTY));
 		List<Listable> listables = new ArrayList<Listable>();
-		Collections.copy(listables, albums);
+		listables.addAll(albums);
 		listables.addAll(artistProperty);
-		ImageFetcher.setProperty(listables);
-		ImageFetcher.getInstance().fetch();
     }
 	
 	

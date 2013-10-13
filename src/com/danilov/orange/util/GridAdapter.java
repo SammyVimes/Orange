@@ -2,6 +2,7 @@ package com.danilov.orange.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -15,20 +16,19 @@ import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.task.ImageFetcher;
 import com.danilov.orange.util.MusicHolder.DataHolder;
+import com.danilov.orange.views.AsyncDrawable;
 
 public class GridAdapter extends ArrayAdapter<Listable> {
 	
 	private static final int VIEW_TYPE_COUNT = 2;
     private final int mLayoutId;
     private DataHolder[] mData;
-    private BitmapHandler mHandler;
-    private boolean[] hasCallback;
+    private Context mContext;
     
 	public GridAdapter(final Context context, final int layoutId) {
         super(context, 0);
-        // Get the layout Id
+        mContext = context;
         mLayoutId = layoutId;
-        mHandler = new BitmapHandler();
     }
 	
 	@Override
@@ -48,24 +48,17 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         holder.mLineOne.get().setText(dataHolder.mLineOne);
         // Set the artist name (line two)
         holder.mLineTwo.get().setText(dataHolder.mLineTwo);
-		holder.mImage.get().setImageBitmap(dataHolder.mImage);
         Listable listable = getItem(position); 
-        if (!hasCallback[position]) {
-    		hasCallback[position] = true;
-            Bitmap bitmap = ImageFetcher.getInstance().getBitmap(listable, new ImageFetcherCallback(listable, dataHolder, holder));
-            if (bitmap != null) {
-            	dataHolder.mImage = bitmap;
-            	holder.mImage.get().setImageBitmap(bitmap);
-            }
-    	}
+        /*Doing this to avoid setting image for reused image view after task complete
+         * for example: we started task, but scrolled from that ImageView and this ImageView
+         * being reused and filled from cache. When task ends it would be filled with the wrong image
+         */
+        holder.mImage.get().setTag(listable);
+        loadBitmap(listable, holder.mImage.get());
         return convertView;
     }
 	
 	public void buildCache() {
-		hasCallback = new boolean[getCount()];
-		for (int i = 0; i < hasCallback.length; i++) {
-			hasCallback[i] = false;
-		}
         mData = new DataHolder[getCount()];
         for (int i = 0; i < getCount(); i++) {
             // Build the album
@@ -79,54 +72,47 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         }
     }
 	
-	public static class BitmapHandler extends Handler {
-		
-		
-		public BitmapHandler() {
-		}
-		
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			ImageFetcherCallback callback = (ImageFetcherCallback) msg.obj;
-			callback.setImage();
-		}
-		
-	}
-	
-	public class ImageFetcherCallback implements IImageFetcherCallback {
-
-		private Listable mListable;
-		private DataHolder mDataHolder;
-		private MusicHolder mMusicHolder;
-		private Bitmap mBitmap;
-		
-		public ImageFetcherCallback(final Listable listable,
-									final DataHolder dataHolder,
-									final MusicHolder musicHolder) {
-			mDataHolder = dataHolder;
-			mMusicHolder = musicHolder;
-			mListable = listable;
-		}
-
-		@Override
-		public void onImageFetched(final Bitmap bitmap) {
-			mBitmap = bitmap;
-			mHandler.sendMessage(mHandler.obtainMessage(0, this));
-		}
-		
-		public void setImage() {
-			mDataHolder.mImage = mBitmap;
-			ImageView iv = mMusicHolder.mImage.get(); 
-			if (iv != null) {
-				iv.setImageBitmap(mBitmap);
+	public void loadBitmap(final Listable listable, final ImageView imageView) {
+		final Bitmap bitmap = BitmapCache.getInstance().getBitmap(listable);
+		if (cancelPotentialWork(listable, imageView)) {
+			if (bitmap != null) {
+				imageView.setImageBitmap(bitmap);
+			} else { 
+	            final ImageFetcher imageFetcher = new ImageFetcher(imageView);
+	            final AsyncDrawable asyncDrawable =
+	                    new AsyncDrawable(mContext.getResources(), null, imageFetcher);
+	            imageView.setImageDrawable(asyncDrawable);
+	            imageFetcher.execute(listable);
 			}
-		}
-
-		public Listable getListable() {
-			return mListable;
-		}
-		
-	}
+        }
+    }
 	
+	public static boolean cancelPotentialWork(final Listable lstble, final ImageView imageView) {
+		
+        final ImageFetcher imageFetcher = getImageFetcher(imageView);
+
+        if (imageFetcher != null) {
+            final Listable listable = imageFetcher.getListable();
+            if (listable != lstble) {
+                // Cancel previous task
+                imageFetcher.cancel(true);
+            } else {
+                // The same work is already in progress
+                return false;
+            }
+        }
+        // No task associated with the ImageView, or an existing task was cancelled
+        return true;
+    }
+	
+	private static ImageFetcher getImageFetcher(ImageView imageView) {
+       if (imageView != null) {
+           final Drawable drawable = imageView.getDrawable();
+           if (drawable instanceof AsyncDrawable) {
+               final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+               return asyncDrawable.getBitmapWorkerTask();
+           }
+        }
+        return null;
+    }
 }

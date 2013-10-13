@@ -122,7 +122,6 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		OrangeApplication app = OrangeApplication.getInstance();
 		app.setAlbums(null);
 		app.setArtistProperty(null);
-		ImageFetcher.deleteInstance();
 		super.onDestroy();
 	}
 	
@@ -306,6 +305,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             if (IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE.equals(intent.getAction())) {
                 updatePlayPauseButtonState();
             } else if (IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED.equals(intent.getAction())) {
+            	mCurrentSong = mPlayer.getCurrentSong();
             	updatePlayPauseButtonState();
             	updateAlbumCover();
             }
