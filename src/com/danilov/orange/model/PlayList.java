@@ -3,11 +3,14 @@ package com.danilov.orange.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.danilov.orange.interfaces.Listable;
+
 public class PlayList {
 	
 	private String name = "";
 	
 	private List<Song> playList;
+	private Listable mListable;
 	private Song mCurrentSong;
 	private int currentSongPosition = 0;
 	
@@ -15,7 +18,9 @@ public class PlayList {
 		playList = new LinkedList<Song>();
 	}
 	
-	public PlayList(List<Song> playList) {
+	public PlayList(final Listable listable, List<Song> songs) {
+		List<Song> playList = songs;
+		this.mListable = listable;
 		this.playList = playList;
 		if (this.playList == null) {
 			this.playList = new LinkedList<Song>();
@@ -59,6 +64,10 @@ public class PlayList {
 	
 	public boolean isEmpty() {
 		return playList.size() == 0 ? true : false;
+	}
+	
+	public Listable getListable() {
+		return mListable;
 	}
 	
 	public void toXML() {

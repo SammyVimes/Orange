@@ -84,7 +84,7 @@ public class Album implements Listable {
 	}
 	
 	public PlayList toPlayList() {
-		PlayList playList = new PlayList(getSongs());
+		PlayList playList = new PlayList(this, getSongs());
 		return playList;
 	}
 

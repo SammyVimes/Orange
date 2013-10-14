@@ -1,12 +1,14 @@
 package com.danilov.orange;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,6 +16,7 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +31,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.model.PlayList;
 import com.danilov.orange.model.Song;
 import com.danilov.orange.task.ImageFetcher;
@@ -314,16 +318,17 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
     }
 	
 	public void updateAlbumCover() {
-		Song curSong = mPlayer.getCurrentSong();
-		Bitmap bitmap = null;
-		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-	    mmr.setDataSource(curSong.getPath().toString());
-	    byte[] artBytes =  mmr.getEmbeddedPicture();
-	    if(artBytes != null) {
-	        InputStream is = new ByteArrayInputStream(mmr.getEmbeddedPicture());
-	        bitmap = BitmapFactory.decodeStream(is);
-	    }
-	    albumCover.setImageBitmap(bitmap);
+		Listable playList = mPlayer.getPlayList().getListable();
+		Uri uri = playList.getThumbnailPath();
+		ContentResolver res = OrangeApplication.getContext().getContentResolver();
+		InputStream in = null;
+		try {
+			in = res.openInputStream(uri);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		Bitmap bm = BitmapFactory.decodeStream(in);
+	    albumCover.setImageBitmap(bm);
 	}
 	
 

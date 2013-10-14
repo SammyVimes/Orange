@@ -13,7 +13,9 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.danilov.orange.PlaylistPickerActivity;
 import com.danilov.orange.model.Album;
+import com.danilov.orange.model.Song;
 import com.danilov.orange.util.IntentActions;
+import com.danilov.orange.util.Utilities;
 
 public class AlbumPickerFragment extends PageFragment {
 	
@@ -53,6 +55,9 @@ public class AlbumPickerFragment extends PageFragment {
 				long id) {
 			Intent intent = new Intent();
 			intent.setAction(IntentActions.INTENT_SET_PLAYLIST_FROM_ALBUM);
+			Album album = (Album)mAdapter.getItem(position);
+			List<Song> songs = Utilities.getSongListForAlbum(getActivity(), album);
+			album.setSongs(songs);
 			intent.putExtra(IntentActions.INTENT_EXTRA_INTEGER_ALBUM, position);
 			getActivity().sendBroadcast(intent);
 			getActivity().finish();
