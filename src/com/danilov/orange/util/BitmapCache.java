@@ -25,10 +25,12 @@ public class BitmapCache {
 	        protected int sizeOf(Listable key, Bitmap bitmap) {
 	            // The cache size will be measured in kilobytes rather than
 	            // number of items.
-	            return bitmap.getByteCount() / 1024;
+	            return BitmapUtils.getSizeInKilobytes(bitmap);
 	        }
 	    };
 	}
+	
+	
 	
 	public void addBitmapToCache(Listable key, Bitmap bitmap) {
 	    if (getBitmap(key) == null && bitmap != null) {

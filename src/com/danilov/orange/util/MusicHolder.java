@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -72,7 +73,6 @@ public class MusicHolder {
 
         // Initialize mLineTwo
         mLineTwo = new WeakReference<TextView>((TextView)view.findViewById(R.id.line_two));
-
     }
 
     /**

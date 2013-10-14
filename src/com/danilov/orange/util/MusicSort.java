@@ -12,25 +12,6 @@ import com.danilov.orange.model.ArtistProperty;
 import com.danilov.orange.test.MockService;
 
 public class MusicSort {
-
-	public static List<Album> sortByAlbums(final List<Song> songs) {
-		List<Album> albums = new ArrayList<Album>();
-		for (Song song : songs) {
-			Album album = getAlbumWithTitle(albums, song.getAlbum());
-			if (album != null) {
-				album.addSong(song);
-			} else {
-				String albumName = song.getAlbum();
-				String artistName = song.getArtist();
-				/*TODO: do smth with IDs*/
-				album = new Album("tmp", albumName, artistName);
-				album.addSong(song);
-				albums.add(album);
-			}
-		}
-		Collections.sort(albums, new AlbumComparator());
-		return albums; 
-	}
 	
 	static class AlbumComparator implements Comparator<Album> {
 
@@ -50,17 +31,6 @@ public class MusicSort {
 		
 	}
 	
-	private static Album getAlbumWithTitle(final List<Album> albums, final String title) {
-		Album result = null;
-		for (Album album : albums) {
-			if (album.getAlbumName().equalsIgnoreCase(title)) {
-				result = album;
-				break;
-			}
-		}
-		return result;
-	}
-	
 	private static ArtistProperty getArtistPropertyWithName(final List<ArtistProperty> artistProperties, final String name) {
 		ArtistProperty result = null;
 		for (ArtistProperty artistProperty : artistProperties) {
@@ -72,16 +42,16 @@ public class MusicSort {
 		return result;
 	}
 	
-	public static List<ArtistProperty> sortByAuthors(final List<Song> songs) {
+	public static List<ArtistProperty> sortByAuthors(final List<Album> albums) {
 		List<ArtistProperty> artistProperty = new ArrayList<ArtistProperty>();
-		for (Song song : songs) {
-			ArtistProperty aProperty = getArtistPropertyWithName(artistProperty, song.getArtist());
+		for (Album album : albums) {
+			ArtistProperty aProperty = getArtistPropertyWithName(artistProperty, album.getArtistName());
 			if (aProperty != null) {
-				aProperty.addSong(song);
+				aProperty.addAlbum(album);
 			} else {
-				String artistName = song.getArtist();
+				String artistName = album.getArtistName();
 				aProperty = new ArtistProperty(artistName);
-				aProperty.addSong(song);
+				aProperty.setThumbnailPath(album.getThumbnailPath());
 				artistProperty.add(aProperty);
 			}
 		}

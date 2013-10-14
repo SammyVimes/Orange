@@ -3,6 +3,8 @@ package com.danilov.orange.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.net.Uri;
+
 import com.danilov.orange.interfaces.Listable;
 
 public class ArtistProperty implements Listable{
@@ -10,6 +12,8 @@ public class ArtistProperty implements Listable{
 	private String mArtistName = "";
 	private int mSongsCount;
 	private List<Song> mSongs;
+	private List<Album> mAlbums;
+	private Uri mThumbnailPath = null;
 	
 	public ArtistProperty(final String artistName) {
 		this(artistName, new LinkedList<Song>());
@@ -46,6 +50,17 @@ public class ArtistProperty implements Listable{
 		mSongs.add(song);
 		mSongsCount = mSongs.size();
 	}
+	
+	public void addAlbum(final Album album) {
+		if (mAlbums == null) {
+			mAlbums = new LinkedList<Album>();
+		}
+		mAlbums.add(album);
+	}
+	
+	public List<Album> getAlbums() {
+		return mAlbums;
+	}
 
 	@Override
 	public String getFirstLine() {
@@ -60,6 +75,15 @@ public class ArtistProperty implements Listable{
 	public PlayList toPlayList() {
 		PlayList playList = new PlayList(getSongs());
 		return playList;
+	}
+
+	@Override
+	public Uri getThumbnailPath() {
+		return mThumbnailPath;
+	}
+	
+	public void setThumbnailPath(final Uri path) {
+		mThumbnailPath = path;
 	}
 	
 	

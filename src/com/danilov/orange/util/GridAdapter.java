@@ -20,7 +20,6 @@ import com.danilov.orange.views.AsyncDrawable;
 
 public class GridAdapter extends ArrayAdapter<Listable> {
 	
-	private static final int VIEW_TYPE_COUNT = 2;
     private final int mLayoutId;
     private DataHolder[] mData;
     private Context mContext;
@@ -49,7 +48,7 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         // Set the artist name (line two)
         holder.mLineTwo.get().setText(dataHolder.mLineTwo);
         Listable listable = getItem(position); 
-        loadBitmap(listable, holder.mImage.get());
+        loadBitmap(listable, holder);
         return convertView;
     }
 	
@@ -67,13 +66,14 @@ public class GridAdapter extends ArrayAdapter<Listable> {
         }
     }
 	
-	public void loadBitmap(final Listable listable, final ImageView imageView) {
+	public void loadBitmap(final Listable listable, final MusicHolder holder) {
+		final ImageView imageView = holder.mImage.get();
 		final Bitmap bitmap = BitmapCache.getInstance().getBitmap(listable);
 		if (cancelPotentialWork(listable, imageView)) {
 			if (bitmap != null) {
 				imageView.setImageBitmap(bitmap);
 			} else { 
-	            final ImageFetcher imageFetcher = new ImageFetcher(imageView);
+	            final ImageFetcher imageFetcher = new ImageFetcher(holder);
 	            final AsyncDrawable asyncDrawable =
 	                    new AsyncDrawable(mContext.getResources(), null, imageFetcher);
 	            imageView.setImageDrawable(asyncDrawable);

@@ -71,6 +71,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		OrangeApplication.setContext(getApplicationContext());
 		setContentView(R.layout.activity_player);
 		btnPlayPause = (ImageButton) findViewById(R.id.btnPlayPause);
 		btnRight = (ImageButton) findViewById(R.id.btnRight);

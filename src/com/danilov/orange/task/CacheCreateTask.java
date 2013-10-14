@@ -1,23 +1,24 @@
 package com.danilov.orange.task;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 
 import com.danilov.orange.OrangeApplication;
 import com.danilov.orange.interfaces.ITaskCallback;
-import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.model.ArtistProperty;
-import com.danilov.orange.model.Song;
 import com.danilov.orange.util.MusicSort;
 
 public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
@@ -39,9 +40,8 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	@Override
 	protected Object doInBackground(Void... arg0) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Song> allSongs = getAllSongs();
-		List<Album> albums = MusicSort.sortByAlbums(allSongs);
-		List<ArtistProperty> artistProperty = MusicSort.sortByAuthors(allSongs);
+		List<Album> albums = getAllAlbums();
+		List<ArtistProperty> artistProperty = MusicSort.sortByAuthors(albums);
 		OrangeApplication.getInstance().setAlbums(albums);
 		OrangeApplication.getInstance().setArtistProperty(artistProperty);
 		map.put(ALBUMS, albums);
@@ -57,46 +57,31 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	@Override
 	protected void onPostExecute(Object result) {
 		mCallback.onTaskComplete(result);
-		List<Listable> albums = (List<Listable>)(((Map)result).get(ALBUMS));
-		List<Listable> artistProperty = (List<Listable>)(((Map)result).get(ARTIST_PROPERTY));
-		List<Listable> listables = new ArrayList<Listable>();
-		listables.addAll(albums);
-		listables.addAll(artistProperty);
     }
 	
-	
 	@SuppressWarnings("deprecation")
-	private List<Song> getAllSongs() {
-		String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-
-		String[] projection = {
-		        MediaStore.Audio.Media._ID,
-		        MediaStore.Audio.Media.ALBUM,
-		        MediaStore.Audio.Media.ARTIST,
-		        MediaStore.Audio.Media.TITLE,
-		        MediaStore.Audio.Media.DATA,
-		        MediaStore.Audio.Media.DURATION
-		};
-
+	private List<Album> getAllAlbums() {
+		String[] projection = new String[] { MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ARTIST,
+				MediaStore.Audio.Albums.ALBUM};
 		Cursor cursor = mActivity.managedQuery(
-		        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+		        MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
 		        projection,
-		        selection,
+		        null,
 		        null,
 		        null);
 
-		List<Song> songs = new ArrayList<Song>();
+		List<Album> albums = new ArrayList<Album>();
 		while(cursor.moveToNext()){
 			String id = cursor.getString(0);
-			String album = cursor.getString(1);
-			String artist = cursor.getString(2);
-			String title = cursor.getString(3);
-			String path = cursor.getString(4);
-			Song song = new Song(id, artist, title, path);
-			song.setAlbum(album);
-			songs.add(song);
+			String artist = cursor.getString(1);
+			String albumName = cursor.getString(2);
+			Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+			Uri uri = ContentUris.withAppendedId(sArtworkUri, Long.valueOf(id));
+			String thumbnailPath =  uri.getPath();
+			Album album = new Album(id, albumName, artist, uri);
+			albums.add(album);
 		}
-		return songs;
+		return albums;
 	}
 	
 	private class NullCallback implements ITaskCallback {

@@ -1,17 +1,20 @@
 package com.danilov.orange.task;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.danilov.orange.OrangeApplication;
 import com.danilov.orange.interfaces.Listable;
-import com.danilov.orange.model.Song;
 import com.danilov.orange.util.BitmapCache;
+import com.danilov.orange.util.MusicHolder;
 
 public class ImageFetcher extends AsyncTask<Listable, Void, Bitmap>{
 	
@@ -19,22 +22,22 @@ public class ImageFetcher extends AsyncTask<Listable, Void, Bitmap>{
     private Listable mListable;
 	
 	
-	public ImageFetcher(final ImageView imageView) {
-		imageViewReference = new WeakReference<ImageView>(imageView);
+	public ImageFetcher(final MusicHolder holder) {
+		imageViewReference = holder.mImage;
 	}
 
 	@Override
 	protected Bitmap doInBackground(Listable... params) {
 		mListable = params[0];
-		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-		Song s = mListable.getSongs().get(0);
-	    mmr.setDataSource(s.getPath().toString());
-	    byte[] artBytes =  mmr.getEmbeddedPicture();
-	    Bitmap bm = null;
-	    if(artBytes != null) {
-	        InputStream is = new ByteArrayInputStream(mmr.getEmbeddedPicture());
-	        bm = BitmapFactory.decodeStream(is);
-	    }
+		Uri uri = mListable.getThumbnailPath();
+		ContentResolver res = OrangeApplication.getContext().getContentResolver();
+		InputStream in = null;
+		try {
+			in = res.openInputStream(uri);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		Bitmap bm = BitmapFactory.decodeStream(in);
 	    BitmapCache.getInstance().addBitmapToCache(mListable, bm);
 	    return bm;
 	}
