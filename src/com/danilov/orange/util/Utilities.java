@@ -97,8 +97,10 @@ public class Utilities {
         		MediaStore.Audio.Media.DATA,
         		MediaStore.Audio.Media.DURATION};
         long id = Long.valueOf(album.getAlbumID());
-        String where = MediaStore.Audio.Media.ALBUM_ID + "=" + id + " AND " + 
-                MediaStore.Audio.Media.IS_MUSIC + "=1";
+//        String where = MediaStore.Audio.Media.ALBUM_ID + "=" + id + " AND " + 
+//                MediaStore.Audio.Media.IS_MUSIC + "=1";
+
+        String where = MediaStore.Audio.Media.ALBUM_ID + "=" + id;
         Cursor cursor = query(context, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 ccols, where, null, MediaStore.Audio.Media.TRACK);
 
@@ -142,6 +144,7 @@ public class Utilities {
             }
             return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
          } catch (UnsupportedOperationException ex) {
+        	ex.printStackTrace();
             return null;
          }
     }

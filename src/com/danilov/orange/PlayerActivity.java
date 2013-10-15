@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -232,6 +233,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                         publishProgress(currentSong);
                     } else {
                     	pause();
+                    	onNotPlaying();
                     }
                 }
                 Utilities.sleep(350);
@@ -269,8 +271,14 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
     }
 	
 	public void onNotPlaying() {
-		time.setText("-:-");
-		songTitle.setText("-");
+		runOnUiThread(new Runnable() {
+            public void run() {
+				time.setText("-:-");
+				songTitle.setText("-");
+				Drawable defaultCover = getResources().getDrawable(R.drawable.adele);
+				albumCover.setImageDrawable(defaultCover);
+            }
+		});
 	}
 	
 	private final class AudioPlayerServiceConnection implements ServiceConnection {

@@ -39,6 +39,7 @@ public class Player implements OnCompletionListener {
 		release();
 		mMediaPlayer = new MediaPlayer();
 		if (mPlayList.isEmpty()) {
+			mCurrentSong = null;
 			return;
 		}
 		mPlayList.restart();
@@ -67,6 +68,9 @@ public class Player implements OnCompletionListener {
 	}
 	
 	public long getDuration() {
+		if (mPlayList.isEmpty()) {
+			return 0;
+		}
 		return mMediaPlayer.getDuration();
 	}
 	
