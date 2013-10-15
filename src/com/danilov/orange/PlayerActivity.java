@@ -333,11 +333,13 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	
 
 	 private void onClickPlayPause() {
-        if (mPlayer.isPlaying() ) {
-            updateCurrentTrackTask.pause();
-        } else {
-            updateCurrentTrackTask.unPause();
-        }
+		if (updateCurrentTrackTask != null) {
+	        if (mPlayer.isPlaying() ) {
+	            updateCurrentTrackTask.pause();
+	        } else {
+	            updateCurrentTrackTask.unPause();
+	        }
+		}
         sendIntentToService(new Intent(IntentActions.INTENT_PLAY_PAUSE));
     }
 
