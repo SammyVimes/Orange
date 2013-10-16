@@ -7,7 +7,10 @@
     
     <!-- The main service uses a sticky broadcast -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+    
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="17" />
