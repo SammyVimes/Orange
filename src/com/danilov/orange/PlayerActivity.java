@@ -116,7 +116,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         waitForAudioPlayertimer.cancel();
         if (updateCurrentTrackTask != null) {
         	updateCurrentTrackTask.cancel(true);
-        	updateCurrentTrackTask.stop();
+        	stopUpdateCurrentTrackTask();
         }
         updateCurrentTrackTask = null;
         unbindService(serviceConnection);
@@ -205,7 +205,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         public void onStartTrackingTouch(SeekBar seekBar) {
             Log.d(TAG,"TimeLineChangeListener started tracking touch");
             if (updateCurrentTrackTask != null) {
-            	updateCurrentTrackTask.pause();
+            	pauseUpdateCurrentTrackTask();
             }
         }
 
@@ -213,7 +213,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             Log.d(TAG,"TimeLineChangeListener stopped tracking touch");
             scheduleSeek(progressFromUser);
             if (updateCurrentTrackTask != null) {
-            	updateCurrentTrackTask.unPause();
+            	unpauseUpdateCurrentTrackTask();
             }
         }
         
@@ -270,21 +270,21 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         }
     }
     
-    public void stopUpdateCurrentTrackTask)() {
+    public void stopUpdateCurrentTrackTask() {
     	if (updateCurrentTrackTask != null) {
     		updateCurrentTrackTask.stop();
     	}	
     }
     
-    public void pauseUpdateCurrentTrackTask)() {
+    public void pauseUpdateCurrentTrackTask() {
     	if (updateCurrentTrackTask != null) {
     		updateCurrentTrackTask.pause();
     	}	
     }
     
-    public void unpauseUpdateCurrentTrackTask)() {
+    public void unpauseUpdateCurrentTrackTask() {
     	if (updateCurrentTrackTask != null) {
-    		updateCurrentTrackTask.unpause();
+    		updateCurrentTrackTask.unPause();
     	}	
     }
 	
@@ -359,13 +359,11 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	
 
 	 private void onClickPlayPause() {
-		if (updateCurrentTrackTask != null) {
-	        if (mPlayer.isPlaying() ) {
-	            updateCurrentTrackTask.pause();
-	        } else {
-	            updateCurrentTrackTask.unPause();
-	        }
-		}
+        if (mPlayer.isPlaying() ) {
+            pauseUpdateCurrentTrackTask();
+        } else {
+            unpauseUpdateCurrentTrackTask();
+        }
         sendIntentToService(new Intent(IntentActions.INTENT_PLAY_PAUSE));
     }
 
@@ -395,12 +393,12 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
     }
 	
 	private void nextSong() {
-		updateCurrentTrackTask.unPause();
+		unpauseUpdateCurrentTrackTask();
 		sendIntentToService(new Intent(IntentActions.INTENT_NEXT_SONG));
 	}
 	
 	private void previousSong() {
-		updateCurrentTrackTask.unPause();
+		unpauseUpdateCurrentTrackTask();
 		sendIntentToService(new Intent(IntentActions.INTENT_PREVIOUS_SONG));
 	}
 	

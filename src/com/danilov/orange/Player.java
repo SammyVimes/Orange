@@ -89,11 +89,11 @@ public class Player implements OnCompletionListener {
 	}
 	
 	public void play(boolean playAnother) {
-		if (mMediaPlayer != null && mPaused && !playAnother) {
+		if (mMediaPlayer != null && mPaused && !playAnother) { //need to resume 
 			mMediaPlayer.start();
 			mPaused = false;
 			return;
-		} else if (mMediaPlayer != null) {
+		} else if (mMediaPlayer != null) { //if player existed and need to play another song
 			release();
 		}
 		mPaused = false;
