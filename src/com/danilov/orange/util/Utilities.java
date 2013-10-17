@@ -118,7 +118,6 @@ public class Utilities {
         }
         int len = cursor.getCount();
         List<Song> list = new LinkedList<Song>();
-        cursor.moveToFirst();
         while(cursor.moveToNext()){
 			String id = cursor.getString(0);
 			String albumName = album.getAlbumName();
