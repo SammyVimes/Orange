@@ -1,8 +1,9 @@
 package com.danilov.orange.task;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
+
+import com.danilov.orange.util.Utilities;
 
 public class ImageFetcherExecutor {
 	
@@ -22,10 +23,14 @@ public class ImageFetcherExecutor {
 	public static void onFetchFinished() {
 		fetchersQuantity--;
 		if (fetchersQuantity < MAX_QUANTITY) {
-			if (fetchers.size() > 0) {
-				ImageFetcher fetcher = fetchers.remove();
-				if (!fetcher.isCancelled()) {
-					fetcher.execute();
+			int querySize = fetchers.size();
+			if (querySize > 0) {
+				for (int i = 0; i < querySize; i++) {
+					ImageFetcher fetcher = fetchers.remove();
+					if (!fetcher.isCancelled()) {
+						fetcher.execute();
+						break;
+					}
 				}
 			}
 		}

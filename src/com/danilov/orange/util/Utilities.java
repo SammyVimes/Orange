@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
+import com.danilov.orange.OrangeApplication;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.model.Song;
 
@@ -129,6 +130,13 @@ public class Utilities {
 			list.add(song);
 		}
         return list;
+    }
+    
+    public static void toaster(final String text) {
+    	Context context = OrangeApplication.getContext();
+    	if (context != null) {
+    		Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    	}
     }
     
     public static Cursor query(Context context, Uri uri, String[] projection,
