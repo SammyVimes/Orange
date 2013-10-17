@@ -15,6 +15,7 @@ import com.danilov.orange.interfaces.IImageFetcherCallback;
 import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.model.Album;
 import com.danilov.orange.task.ImageFetcher;
+import com.danilov.orange.task.ImageFetcherExecutor;
 import com.danilov.orange.util.MusicHolder.DataHolder;
 import com.danilov.orange.views.AsyncDrawable;
 
@@ -77,7 +78,8 @@ public class GridAdapter extends ArrayAdapter<Listable> {
 	            final AsyncDrawable asyncDrawable =
 	                    new AsyncDrawable(mContext.getResources(), null, imageFetcher);
 	            imageView.setImageDrawable(asyncDrawable);
-	            imageFetcher.execute(listable);
+	            imageFetcher.setListable(listable);
+	            ImageFetcherExecutor.scheduleFetcher(imageFetcher);
 			}
         }
     }

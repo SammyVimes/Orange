@@ -16,7 +16,7 @@ import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.util.BitmapCache;
 import com.danilov.orange.util.MusicHolder;
 
-public class ImageFetcher extends AsyncTask<Listable, Void, Bitmap>{
+public class ImageFetcher extends AsyncTask<Void, Void, Bitmap>{
 	
     private final WeakReference<ImageView> imageViewReference;
     private Listable mListable;
@@ -25,10 +25,13 @@ public class ImageFetcher extends AsyncTask<Listable, Void, Bitmap>{
 	public ImageFetcher(final MusicHolder holder) {
 		imageViewReference = holder.mImage;
 	}
+	
+	public void setListable(final Listable listable) {
+		mListable = listable;
+	}
 
 	@Override
-	protected Bitmap doInBackground(Listable... params) {
-		mListable = params[0];
+	protected Bitmap doInBackground(Void... params) {
 		Uri uri = mListable.getThumbnailPath();
 		ContentResolver res = OrangeApplication.getContext().getContentResolver();
 		InputStream in = null;
@@ -54,6 +57,7 @@ public class ImageFetcher extends AsyncTask<Listable, Void, Bitmap>{
             	imageView.setImageBitmap(bitmap);
             }
         }
+        ImageFetcherExecutor.onFetchFinished();
     }
 	
 	public Listable getListable() {
