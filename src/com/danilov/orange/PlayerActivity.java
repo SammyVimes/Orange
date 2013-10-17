@@ -269,6 +269,24 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             this.paused = false;
         }
     }
+    
+    public void stopUpdateCurrentTrackTask)() {
+    	if (updateCurrentTrackTask != null) {
+    		updateCurrentTrackTask.stop();
+    	}	
+    }
+    
+    public void pauseUpdateCurrentTrackTask)() {
+    	if (updateCurrentTrackTask != null) {
+    		updateCurrentTrackTask.pause();
+    	}	
+    }
+    
+    public void unpauseUpdateCurrentTrackTask)() {
+    	if (updateCurrentTrackTask != null) {
+    		updateCurrentTrackTask.unpause();
+    	}	
+    }
 	
 	public void onNotPlaying() {
 		runOnUiThread(new Runnable() {
