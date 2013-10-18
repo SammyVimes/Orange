@@ -1,5 +1,7 @@
 package com.danilov.orange;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.danilov.orange.model.Album;
@@ -53,7 +56,18 @@ public class AudioPlayerService extends Service{
         intentFilter.addAction(IntentActions.INTENT_SET_PLAYLIST_FROM_ARTIST_PROPERTY);
         intentFilter.addAction(IntentActions.INTENT_SEEK);
         registerReceiver(broadcastReceiver, intentFilter);
+        showNotification();
         mPlayer = new Player(getApplicationContext(), new CompletionListener());
+	}
+	
+	private void showNotification() {
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+		Notification noti = new NotificationCompat.Builder(this)
+        .setContentTitle("Orange")
+        .setContentText("playing")
+        .setSmallIcon(R.drawable.ic_launcher)
+        .getNotification();
+		notificationManager.notify(0, noti);
 	}
 	
 	public void seek(final int progress) {
