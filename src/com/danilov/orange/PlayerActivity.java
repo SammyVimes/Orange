@@ -1,8 +1,9 @@
 package com.danilov.orange;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,7 +17,6 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,10 +32,10 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.danilov.orange.fragments.EasyDialog;
 import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.model.PlayList;
 import com.danilov.orange.model.Song;
-import com.danilov.orange.task.ImageFetcher;
 import com.danilov.orange.util.BasePlayerActivity;
 import com.danilov.orange.util.IntentActions;
 import com.danilov.orange.util.Utilities;
