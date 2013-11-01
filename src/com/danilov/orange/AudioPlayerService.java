@@ -62,13 +62,12 @@ public class AudioPlayerService extends Service{
 	
 	private void showNotification() {
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
-		Notification notification = new NotificationCompat.Builder(this)
+		Notification noti = new NotificationCompat.Builder(this)
         .setContentTitle("Orange")
         .setContentText("playing")
         .setSmallIcon(R.drawable.ic_launcher)
         .getNotification();
-		notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
-		notificationManager.notify(0, notification);
+		notificationManager.notify(0, noti);
 	}
 	
 	public void seek(final int progress) {
@@ -83,8 +82,6 @@ public class AudioPlayerService extends Service{
 	
 	@Override
 	public void onDestroy() {
-		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		notificationManager.cancel(0);
 		unregisterReceiver(broadcastReceiver);
 		Log.d(TAG, "Service: onDestroy() called");
 		super.onDestroy();
