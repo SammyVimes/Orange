@@ -46,13 +46,14 @@ public class MusicSort {
 		List<ArtistProperty> artistProperty = new ArrayList<ArtistProperty>();
 		for (Album album : albums) {
 			ArtistProperty aProperty = getArtistPropertyWithName(artistProperty, album.getArtistName());
-			if (aProperty == null) {
+			if (aProperty != null) {
+				aProperty.addAlbum(album);
+			} else {
 				String artistName = album.getArtistName();
 				aProperty = new ArtistProperty(artistName);
 				aProperty.setThumbnailPath(album.getThumbnailPath());
 				artistProperty.add(aProperty);
 			}
-			aProperty.addAlbum(album);
 		}
 		return artistProperty; 
 	}

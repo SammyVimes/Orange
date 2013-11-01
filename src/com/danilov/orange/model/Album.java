@@ -49,14 +49,6 @@ public class Album implements Listable {
 	public String getAlbumID() {
 		return mAlbumID;
 	}
-	
-	public int getSongsCount() {
-		return mSongsCount;
-	}
-	
-	public void setSongsCount(final int count) {
-		this.mSongsCount = count;
-	}
 
 	public void setAlbumID(String mAlbumID) {
 		this.mAlbumID = mAlbumID;

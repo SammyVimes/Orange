@@ -20,16 +20,12 @@
             android:id="@+id/songTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.70"
+            android:layout_weight="0.80"
             android:textColor="@color/orange"
             android:textSize="16dp"
             android:paddingLeft="10dp"
             android:textStyle="bold"
             android:text="NOT PLAYING"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-			android:marqueeRepeatLimit="marquee_forever"
-			android:scrollHorizontally="true"
             android:layout_marginTop="10dp"/>
 
         <TextView
@@ -37,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_weight="0.30"
+            android:layout_weight="0.20"
             android:paddingLeft="10dp"
             android:text="-:-"
             android:textColor="@color/orange"

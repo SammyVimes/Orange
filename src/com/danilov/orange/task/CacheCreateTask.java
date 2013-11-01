@@ -61,12 +61,8 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 	
 	@SuppressWarnings("deprecation")
 	private List<Album> getAllAlbums() {
-		String[] projection = new String[] {
-				MediaStore.Audio.Albums._ID,
-				MediaStore.Audio.Albums.ARTIST,
-				MediaStore.Audio.Albums.ALBUM,
-				MediaStore.Audio.Albums.NUMBER_OF_SONGS
-				};
+		String[] projection = new String[] { MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ARTIST,
+				MediaStore.Audio.Albums.ALBUM};
 		Cursor cursor = mActivity.managedQuery(
 		        MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
 		        projection,
@@ -75,15 +71,14 @@ public class CacheCreateTask extends AsyncTask<Void, Void, Object>{
 		        null);
 
 		List<Album> albums = new ArrayList<Album>();
-		Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 		while(cursor.moveToNext()){
 			String id = cursor.getString(0);
 			String artist = cursor.getString(1);
 			String albumName = cursor.getString(2);
-			int count = cursor.getInt(3);
+			Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 			Uri uri = ContentUris.withAppendedId(sArtworkUri, Long.valueOf(id));
+			String thumbnailPath =  uri.getPath();
 			Album album = new Album(id, albumName, artist, uri);
-			album.setSongsCount(count);
 			albums.add(album);
 		}
 		return albums;

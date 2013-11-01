@@ -31,8 +31,6 @@ public class AudioPlayerService extends Service{
     private AudioPlayerBroadcastReceiver broadcastReceiver = new AudioPlayerBroadcastReceiver();
 	private Player mPlayer;
 	
-	private NotificationHelper helper;
-	
 	public class AudioPlayerBinder extends Binder {
 		
 		public AudioPlayerService getService() {
@@ -54,26 +52,23 @@ public class AudioPlayerService extends Service{
         intentFilter.addAction(IntentActions.INTENT_NEXT_SONG);
         intentFilter.addAction(IntentActions.INTENT_PLAY_PAUSE);
         intentFilter.addAction(IntentActions.INTENT_PREVIOUS_SONG);
-        intentFilter.addAction(IntentActions.INTENT_STOP);
         intentFilter.addAction(IntentActions.INTENT_SET_PLAYLIST_FROM_ALBUM);
         intentFilter.addAction(IntentActions.INTENT_SET_PLAYLIST_FROM_ARTIST_PROPERTY);
         intentFilter.addAction(IntentActions.INTENT_SEEK);
         registerReceiver(broadcastReceiver, intentFilter);
-        mPlayer = new Player(getApplicationContext(), new CompletionListener());
         showNotification();
+        mPlayer = new Player(getApplicationContext(), new CompletionListener());
 	}
 	
 	private void showNotification() {
-		helper = new NotificationHelper(this);
-		helper.buildNotification(mPlayer.getCurrentSong());
-	}
-	
-	private void updateNotification(final boolean isPlaying) {
-		helper.updateNotification(isPlaying);
-	}
-	
-	private void killNotification() {
-		stopForeground(true);
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+		Notification notification = new NotificationCompat.Builder(this)
+        .setContentTitle("Orange")
+        .setContentText("playing")
+        .setSmallIcon(R.drawable.ic_launcher)
+        .getNotification();
+		notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
+		notificationManager.notify(0, notification);
 	}
 	
 	public void seek(final int progress) {
@@ -113,8 +108,6 @@ public class AudioPlayerService extends Service{
 		} else {
 			mPlayer.play(false);
 		}
-        showNotification();
-        updateNotification(mPlayer.isPlaying());
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
 	}
 	
@@ -123,8 +116,6 @@ public class AudioPlayerService extends Service{
 			return;
 		}
 		mPlayer.nextSong();
-        showNotification();
-        updateNotification(mPlayer.isPlaying());
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED);
 	}
 	
@@ -133,8 +124,6 @@ public class AudioPlayerService extends Service{
 			return;
 		}
 		mPlayer.previousSong();
-        showNotification();
-        updateNotification(mPlayer.isPlaying());
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED);
 	}
 	
@@ -144,7 +133,6 @@ public class AudioPlayerService extends Service{
 		}
 		Album curAlbum = OrangeApplication.getInstance().getAlbums().get(playlistNum);
 		mPlayer.setPlayList(curAlbum.toPlayList());
-		showNotification();
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED);
 	}
 	
@@ -169,8 +157,6 @@ public class AudioPlayerService extends Service{
             	nextSong();
             } else if (IntentActions.INTENT_PREVIOUS_SONG.equals(action)) {
             	previousSong();
-            } else if (IntentActions.INTENT_STOP.equals(action)) {
-                killNotification();
             } else if (IntentActions.INTENT_SEEK.equals(action)) {
             	int progress = intent.getIntExtra(IntentActions.INTENT_EXTRA_INTEGER_SEEK, 0);
             	seek(progress);

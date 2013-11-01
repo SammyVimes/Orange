@@ -268,28 +268,28 @@ public final class R {
 		public static final int btn_cab_done_default_abridged = 0x7f02007f;
 		public static final int btn_cab_done_focused_abridged = 0x7f020081;
 		public static final int btn_cab_done_pressed_abridged = 0x7f020084;
-		public static final int cab_background_bottom_abridged = 0x7f0200b9;
-		public static final int cab_background_top_abridged = 0x7f0200bb;
-		public static final int list_focused_abridged = 0x7f0200c2;
-		public static final int menu_dropdown_panel_abridged = 0x7f0200ca;
-		public static final int pressed_background_abridged = 0x7f0200cc;
-		public static final int progress_bg_abridged = 0x7f0200ce;
-		public static final int progress_horizontal_abridged = 0x7f0200d1;
-		public static final int progress_primary_abridged = 0x7f0200d5;
-		public static final int progress_secondary_abridged = 0x7f0200d8;
-		public static final int selectable_background_abridged = 0x7f0200f7;
-		public static final int spinner_ab_default_abridged = 0x7f0200f9;
-		public static final int spinner_ab_disabled_abridged = 0x7f0200fb;
-		public static final int spinner_ab_focused_abridged = 0x7f0200fd;
-		public static final int spinner_ab_pressed_abridged = 0x7f0200ff;
-		public static final int spinner_background_ab_abridged = 0x7f020101;
-		public static final int tab_indicator_ab_abridged = 0x7f020103;
-		public static final int tab_selected_abridged = 0x7f020105;
-		public static final int tab_selected_focused_abridged = 0x7f020106;
-		public static final int tab_selected_pressed_abridged = 0x7f020109;
-		public static final int tab_unselected_abridged = 0x7f02010b;
-		public static final int tab_unselected_focused_abridged = 0x7f02010c;
-		public static final int tab_unselected_pressed_abridged = 0x7f02010f;
+		public static final int cab_background_bottom_abridged = 0x7f0200b4;
+		public static final int cab_background_top_abridged = 0x7f0200b6;
+		public static final int list_focused_abridged = 0x7f0200bd;
+		public static final int menu_dropdown_panel_abridged = 0x7f0200c5;
+		public static final int pressed_background_abridged = 0x7f0200c7;
+		public static final int progress_bg_abridged = 0x7f0200c9;
+		public static final int progress_horizontal_abridged = 0x7f0200cc;
+		public static final int progress_primary_abridged = 0x7f0200d0;
+		public static final int progress_secondary_abridged = 0x7f0200d3;
+		public static final int selectable_background_abridged = 0x7f0200f2;
+		public static final int spinner_ab_default_abridged = 0x7f0200f4;
+		public static final int spinner_ab_disabled_abridged = 0x7f0200f6;
+		public static final int spinner_ab_focused_abridged = 0x7f0200f8;
+		public static final int spinner_ab_pressed_abridged = 0x7f0200fa;
+		public static final int spinner_background_ab_abridged = 0x7f0200fc;
+		public static final int tab_indicator_ab_abridged = 0x7f0200fe;
+		public static final int tab_selected_abridged = 0x7f020100;
+		public static final int tab_selected_focused_abridged = 0x7f020101;
+		public static final int tab_selected_pressed_abridged = 0x7f020104;
+		public static final int tab_unselected_abridged = 0x7f020106;
+		public static final int tab_unselected_focused_abridged = 0x7f020107;
+		public static final int tab_unselected_pressed_abridged = 0x7f02010a;
 	}
 	public static final class id {
 		public static final int abs__action_bar = 0x7f040020;
@@ -368,8 +368,8 @@ public final class R {
 		public static final int abs__search_dropdown_item_icons_2line = 0x7f030012;
 		public static final int abs__search_view = 0x7f030013;
 		public static final int abs__simple_dropdown_hint = 0x7f030014;
-		public static final int sherlock_spinner_dropdown_item = 0x7f03001b;
-		public static final int sherlock_spinner_item = 0x7f03001c;
+		public static final int sherlock_spinner_dropdown_item = 0x7f03001a;
+		public static final int sherlock_spinner_item = 0x7f03001b;
 	}
 	public static final class string {
 		public static final int abs__action_bar_home_description = 0x7f090000;

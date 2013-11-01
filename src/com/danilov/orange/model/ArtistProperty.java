@@ -37,7 +37,7 @@ public class ArtistProperty implements Listable{
 		return mSongsCount;
 	}
 	
-	public void setSongs(final List<Song> songs) {
+	public void setSongs(final LinkedList<Song> songs) {
 		mSongs = songs;
 		mSongsCount = mSongs.size();
 	}
@@ -56,7 +56,6 @@ public class ArtistProperty implements Listable{
 			mAlbums = new LinkedList<Album>();
 		}
 		mAlbums.add(album);
-		mSongsCount += album.getSongsCount();
 	}
 	
 	public List<Album> getAlbums() {
