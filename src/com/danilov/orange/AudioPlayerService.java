@@ -145,6 +145,7 @@ public class AudioPlayerService extends Service{
 		Album curAlbum = OrangeApplication.getInstance().getAlbums().get(playlistNum);
 		mPlayer.setPlayList(curAlbum.toPlayList());
 		showNotification();
+		updateNotification(false);
 		sendIntent(IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED);
 	}
 	

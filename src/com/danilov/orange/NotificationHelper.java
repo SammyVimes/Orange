@@ -48,7 +48,6 @@ public class NotificationHelper {
 				        .setContent(mNotificationView)
 				        .getNotification();
     	mNotification.flags = mNotification.flags | Notification.FLAG_ONGOING_EVENT;
-    	mNotification.icon = R.drawable.ic_launcher;
     	initPlaybackActions();
     	mService.startForeground(MUSIC_SERVICE, mNotification);
     }
@@ -60,6 +59,8 @@ public class NotificationHelper {
     
     public void updateNotification(final boolean isPlaying) {
     	if (mNotification != null && mNotificationManager != null) {
+    		int sdkVersion = android.os.Build.VERSION.SDK_INT;
+    		//TODO: check if can use buttons
 	    	mNotificationView.setImageViewResource(R.id.notification_play,
 	                isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
 	    	mNotificationManager.notify(MUSIC_SERVICE, mNotification);
