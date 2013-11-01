@@ -60,7 +60,7 @@ public class Player implements OnCompletionListener {
 	}
 	
 	public String getSongTitle() {
-		return mCurrentSong.getTitle();
+		return mCurrentSong != null ? mCurrentSong.getTitle() : null;
 	}
 	
 	public Uri getSongPath() {

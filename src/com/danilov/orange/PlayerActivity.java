@@ -84,6 +84,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		albumCover = (ImageView) findViewById(R.id.albumCover);
 		time = (TextView) findViewById(R.id.time);
 		songTitle = (TextView) findViewById(R.id.songTitle);
+		songTitle.setSelected(true);
 		timeLine = (SeekBar) findViewById(R.id.timeLine);
 	}
 	
@@ -158,7 +159,6 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                 timeLine.setMax((int) mPlayer.getDuration());
                 timeLine.setProgress((int) elapsedMillis);
                 time.setText(Utilities.milliSecondsToTimer(elapsedMillis));
-                songTitle.setText(song.getTitle());
                 if (mPlayer.isPlaying()) {
                 	if (state == PlayerState.PAUSED) {
                 		updatePlayPauseButtonState();
@@ -334,14 +334,28 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG,"AudioPlayerBroadCastReceiver.onReceive action=" + intent.getAction());
             if (IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE.equals(intent.getAction())) {
+        		unpauseUpdateCurrentTrackTask();
                 updatePlayPauseButtonState();
             } else if (IntentActions.INTENT_FROM_SERVICE_SONG_CHANGED.equals(intent.getAction())) {
             	mCurrentSong = mPlayer.getCurrentSong();
+        		unpauseUpdateCurrentTrackTask();
             	updatePlayPauseButtonState();
             	updateAlbumCover();
+            	updateSongTitle();
             }
         }
     }
+	
+	public void updateSongTitle() {
+        if (mPlayer != null) {
+        	String title = mPlayer.getSongTitle();
+        	if (title != null) {
+        		songTitle.setText(title);	
+        	} else {
+        		onNotPlaying();	
+        	}
+        }
+	}
 	
 	public void updateAlbumCover() {
 		Listable playList = mPlayer.getPlayList().getListable();
@@ -425,6 +439,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	
 	public void updatePlayQueue() {
         updatePlayPauseButtonState();
+        updateSongTitle();
         if(updateCurrentTrackTask == null) {
             updateCurrentTrackTask = new UpdateCurrentTrackTask();
             updateCurrentTrackTask.execute();
