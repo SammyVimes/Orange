@@ -25,10 +25,13 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -38,7 +41,9 @@ import com.danilov.orange.model.PlayList;
 import com.danilov.orange.model.Song;
 import com.danilov.orange.util.BasePlayerActivity;
 import com.danilov.orange.util.IntentActions;
+import com.danilov.orange.util.PlaylistAdapter;
 import com.danilov.orange.util.Utilities;
+import com.slidinglayer.SlidingLayer;
 
 public class PlayerActivity extends BasePlayerActivity implements OnClickListener{
 
@@ -61,6 +66,8 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 	private TextView time;
 	private TextView songTitle;
 	private SeekBar timeLine;
+	private SlidingLayer slidingPlaylist;
+	private ListView playlistView;
 	private PlayerState state = PlayerState.PAUSED;
 	
 	public enum PlayerState {
@@ -86,6 +93,9 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		songTitle = (TextView) findViewById(R.id.songTitle);
 		songTitle.setSelected(true);
 		timeLine = (SeekBar) findViewById(R.id.timeLine);
+		slidingPlaylist = (SlidingLayer) findViewById(R.id.playlist);
+		playlistView = (ListView) findViewById(R.id.playlistView);
+		playlistView.setOnItemClickListener(new PlaylistClickListener());
 	}
 	
 	public void initControls() {
@@ -146,6 +156,9 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 			case R.id.menu_choose_playlist:
 				intent = new Intent(this, PlaylistPickerActivity.class);
 				this.startActivity(intent);
+				break;
+			case R.id.open_playlist:
+				slidingPlaylist.openLayer(true);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -253,6 +266,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         	if (song[0] != mCurrentSong) {
         		mCurrentSong = song[0];
         		updateAlbumCover();
+        		updatePlaylistView();
         	}
             updatePlayPanel(song[0]);
         }
@@ -341,10 +355,24 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
         		unpauseUpdateCurrentTrackTask();
             	updatePlayPauseButtonState();
             	updateAlbumCover();
+            	updatePlaylistView();
             	updateSongTitle();
             }
         }
     }
+	
+	public void updatePlaylistView() {
+		if (mPlayer == null) {
+			return;
+		}
+		PlayList playList = mPlayer.getPlayList();
+		PlaylistAdapter adapter = new PlaylistAdapter(this, R.layout.playlist_item, playList);
+		int index = playlistView.getFirstVisiblePosition();
+		View v = playlistView.getChildAt(0);
+		int top = (v == null) ? 0 : v.getTop();
+		playlistView.setAdapter(adapter);
+		playlistView.setSelectionFromTop(index, top);
+	}
 	
 	public void updateSongTitle() {
         if (mPlayer != null) {
@@ -447,5 +475,16 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
             Log.e(TAG, "updateCurrentTrackTask is not null" );
         }
     }
+	
+	private class PlaylistClickListener implements OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			Intent intent = new Intent(IntentActions.INTENT_PLAY_BY_POSITION);
+			intent.putExtra(IntentActions.INTENT_EXTRA_INTEGER_SONG_POSITION, position);
+			sendIntentToService(intent);
+		}
+	}
 
 }

@@ -88,6 +88,11 @@ public class Player implements OnCompletionListener {
 		play(true);
 	}
 	
+	public void playByPosition(final int pos) {
+		mCurrentSong = mPlayList.setCurrentSong(pos);
+		play(true);
+	}
+	
 	public void play(boolean playAnother) {
 		if (mMediaPlayer != null && mPaused && !playAnother) { //need to resume 
 			mMediaPlayer.start();

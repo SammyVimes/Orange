@@ -6,5 +6,6 @@
     <string name="action_settings">Настройки</string>
 	<string name="albums">Альбомы</string>
     <string name="artists">Исполнители</string>
+    <string name="playlist">Плейлист</string>
     
 </resources>
