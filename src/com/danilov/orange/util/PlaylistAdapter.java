@@ -1,6 +1,7 @@
 package com.danilov.orange.util;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class PlaylistAdapter extends ArrayAdapter<Song>{
         	currentSongPosition = position;
         	convertView.setBackgroundColor(color);
         } else {
-        	convertView.setBackgroundDrawable(null);
+        	convertView.setBackgroundColor(Color.TRANSPARENT);
         }
         holder.songName.setText(song.getTitle());
         // Set album name (line two)

@@ -1,6 +1,7 @@
 package com.danilov.orange;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -95,6 +97,7 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		timeLine = (SeekBar) findViewById(R.id.timeLine);
 		slidingPlaylist = (SlidingLayer) findViewById(R.id.playlist);
 		playlistView = (ListView) findViewById(R.id.playlistView);
+		playlistView.setCacheColorHint(Color.TRANSPARENT);
 		playlistView.setOnItemClickListener(new PlaylistClickListener());
 	}
 	
@@ -389,14 +392,28 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		Listable playList = mPlayer.getPlayList().getListable();
 		Uri uri = playList.getThumbnailPath();
 		ContentResolver res = OrangeApplication.getContext().getContentResolver();
+		if (uri == null) {
+		    albumCover.setImageDrawable(getResources().getDrawable(R.drawable.adele));
+			return;
+		}
 		InputStream in = null;
 		try {
 			in = res.openInputStream(uri);
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
+			//TODO: handle exception
 			e.printStackTrace();
+		}
+		if (in == null) {
+		    albumCover.setImageDrawable(getResources().getDrawable(R.drawable.adele));
+			return;
 		}
 		Bitmap bm = BitmapFactory.decodeStream(in);
 	    albumCover.setImageBitmap(bm);
+	    try {
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 

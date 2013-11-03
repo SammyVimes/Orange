@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
@@ -48,7 +47,10 @@ public class NotificationHelper {
 				        .setContent(mNotificationView)
 				        .getNotification();
     	mNotification.flags = mNotification.flags | Notification.FLAG_ONGOING_EVENT;
-    	initPlaybackActions();
+    	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+    		initPlaybackActions();
+    	}
+//    	initPlaybackActions();
     	mService.startForeground(MUSIC_SERVICE, mNotification);
     }
     

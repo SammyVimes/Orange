@@ -33,6 +33,9 @@ public class ImageFetcher extends AsyncTask<Void, Void, Bitmap>{
 	@Override
 	protected Bitmap doInBackground(Void... params) {
 		Uri uri = mListable.getThumbnailPath();
+		if (uri == null) {
+			return null;
+		}
 		ContentResolver res = OrangeApplication.getContext().getContentResolver();
 		InputStream in = null;
 		try {

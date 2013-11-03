@@ -1,5 +1,9 @@
 package com.danilov.orange.util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -160,5 +164,22 @@ public class Utilities {
             String selection, String[] selectionArgs, String sortOrder) {
         return query(context, uri, projection, selection, selectionArgs, sortOrder, 0);
     }
+    
+
+	
+	public static boolean fileExists(final Uri uri) {
+		ContentResolver res = OrangeApplication.getContext().getContentResolver();
+		InputStream in = null;
+		try {
+			in = res.openInputStream(uri);
+			in.close();
+			return true;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
     
 }
