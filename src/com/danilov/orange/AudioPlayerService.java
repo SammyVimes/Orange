@@ -84,6 +84,8 @@ public class AudioPlayerService extends Service{
 			mPlayer.play(false);
 		}
 		mPlayer.seek(progress);
+        showNotification();
+        updateNotification(mPlayer.isPlaying());
 	}
 	
 	@Override
