@@ -114,11 +114,12 @@ int color abs__bright_foreground_disabled_holo_dark 0x7f060004
 int color abs__bright_foreground_disabled_holo_light 0x7f060005
 int color abs__bright_foreground_holo_dark 0x7f060002
 int color abs__bright_foreground_holo_light 0x7f060003
-int color abs__primary_text_disable_only_holo_dark 0x7f06000b
-int color abs__primary_text_disable_only_holo_light 0x7f06000c
-int color abs__primary_text_holo_dark 0x7f06000d
-int color abs__primary_text_holo_light 0x7f06000e
+int color abs__primary_text_disable_only_holo_dark 0x7f06000c
+int color abs__primary_text_disable_only_holo_light 0x7f06000d
+int color abs__primary_text_holo_dark 0x7f06000e
+int color abs__primary_text_holo_light 0x7f06000f
 int color black 0x7f06000a
+int color grey 0x7f06000b
 int color orange 0x7f060008
 int color pressed_abridged 0x7f060006
 int color pressed_orange 0x7f060007

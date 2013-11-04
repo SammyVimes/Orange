@@ -116,6 +116,10 @@ public class Player implements OnCompletionListener {
 		}
 	}
 	
+	public void stop() {
+		pause();
+	}
+	
 	public void pause() {
 		mPaused = true;
 		mMediaPlayer.pause();

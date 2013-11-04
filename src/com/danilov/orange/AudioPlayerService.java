@@ -72,6 +72,7 @@ public class AudioPlayerService extends Service{
 	}
 	
 	private void killNotification() {
+		stop();
 		stopForeground(true);
 	}
 	
@@ -101,6 +102,11 @@ public class AudioPlayerService extends Service{
 	private void sendIntent(final String action) {
 		Intent intent = new Intent(action);
 		sendBroadcast(intent);
+	}
+	
+	private void stop() {
+		mPlayer.stop();
+		sendIntent(IntentActions.INTENT_FROM_SERVICE_PLAY_PAUSE);
 	}
 	
 	private void playPause() {

@@ -1,10 +1,7 @@
 package com.danilov.orange;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,19 +22,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.danilov.orange.fragments.EasyDialog;
 import com.danilov.orange.interfaces.Listable;
 import com.danilov.orange.model.PlayList;
 import com.danilov.orange.model.Song;
@@ -171,6 +168,10 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		
         runOnUiThread(new Runnable() {
             public void run() {
+            	if (!mPlayer.isPlaying()) {
+            		pauseUpdateCurrentTrackTask();
+            		return;
+            	}
                 long elapsedMillis = mPlayer.getCurrentPosition();
                 timeLine.setMax((int) mPlayer.getDuration());
                 timeLine.setProgress((int) elapsedMillis);
@@ -502,6 +503,17 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 			intent.putExtra(IntentActions.INTENT_EXTRA_INTEGER_SONG_POSITION, position);
 			sendIntentToService(intent);
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	        if (slidingPlaylist.isOpened()) {
+	        	slidingPlaylist.closeLayer(true);
+	        	return true;
+	        }
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 
 }
