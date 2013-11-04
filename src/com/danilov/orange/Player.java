@@ -117,6 +117,9 @@ public class Player implements OnCompletionListener {
 	}
 	
 	public void stop() {
+		if (mPaused) {
+			return;
+		}
 		pause();
 	}
 	
