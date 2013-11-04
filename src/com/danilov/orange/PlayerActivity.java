@@ -168,10 +168,6 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
 		
         runOnUiThread(new Runnable() {
             public void run() {
-            	if (!mPlayer.isPlaying()) {
-            		pauseUpdateCurrentTrackTask();
-            		return;
-            	}
                 long elapsedMillis = mPlayer.getCurrentPosition();
                 timeLine.setMax((int) mPlayer.getDuration());
                 timeLine.setProgress((int) elapsedMillis);
@@ -185,6 +181,9 @@ public class PlayerActivity extends BasePlayerActivity implements OnClickListene
                 		updatePlayPauseButtonState();
                 	}
                 }
+            	if (!mPlayer.isPlaying()) {
+            		pauseUpdateCurrentTrackTask();
+            	}
             }
         });
     }
