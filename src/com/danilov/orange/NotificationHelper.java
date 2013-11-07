@@ -131,10 +131,6 @@ public class NotificationHelper {
     	mService.stopForeground(true);
     }
     
-    public void removeNotification() {
-    	mService.stopForeground(true);
-    }
-    
     private final PendingIntent retreivePlaybackActions(final int which) {
         Intent action;
         PendingIntent pendingIntent;
