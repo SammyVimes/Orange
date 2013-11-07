@@ -1,5 +1,7 @@
 package com.danilov.orange;
 
+import java.lang.reflect.Field;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.NotificationCompat;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import com.danilov.orange.model.Song;
@@ -46,6 +49,20 @@ public class NotificationHelper {
 				        .setContentIntent(getPendingIntent())
 				        .setContent(mNotificationView)
 				        .getNotification();
+    	mNotification.contentView = mNotificationView;
+    	boolean hasLargeIcon = true;
+		try {
+			Class clazz = Class.forName("android.app.Notification;");
+	    	Field field = clazz.getField("largeIcon");
+	    	if (field == null) {
+	    		hasLargeIcon = false;
+	    	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	if (!hasLargeIcon) {
+    		mNotificationView.setImageViewResource(R.id.bigIcon, R.drawable.ic_launcher);
+    	}
     	mNotification.flags = mNotification.flags | Notification.FLAG_ONGOING_EVENT;
     	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
     		initPlaybackActions();
@@ -61,11 +78,17 @@ public class NotificationHelper {
     
     public void updateNotification(final boolean isPlaying) {
     	if (mNotification != null && mNotificationManager != null) {
-    		int sdkVersion = android.os.Build.VERSION.SDK_INT;
-    		//TODO: check if can use buttons
-	    	mNotificationView.setImageViewResource(R.id.notification_play,
-	                isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
-	    	mNotificationManager.notify(MUSIC_SERVICE, mNotification);
+    		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+    	    	mNotificationView.setImageViewResource(R.id.notification_play,
+    	                isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+    	    	mNotificationManager.notify(MUSIC_SERVICE, mNotification);
+        	} else {
+        		if (isPlaying) {
+        	    	mNotificationManager.notify(MUSIC_SERVICE, mNotification);
+        		} else {
+        			removeNotification();
+        		}
+        	}
     	}
     }
     
@@ -100,6 +123,10 @@ public class NotificationHelper {
 	        // Artist name (line two)
 	        mNotificationView.setTextViewText(R.id.notification_line_two, artistName);
     	}
+    }
+    
+    public void removeNotification() {
+    	mService.stopForeground(true);
     }
     
     private final PendingIntent retreivePlaybackActions(final int which) {
