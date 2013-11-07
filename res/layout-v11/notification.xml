@@ -21,7 +21,8 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    tools:ignore="ContentDescription">
+    tools:ignore="ContentDescription"
+    android:background="@color/black">
 
 
     <LinearLayout

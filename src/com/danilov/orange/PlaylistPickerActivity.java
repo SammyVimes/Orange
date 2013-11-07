@@ -49,6 +49,9 @@ public class PlaylistPickerActivity extends BasePlayerActivity {
 		} else {
 			restoring = true;
 		}
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
 		initActionBarTabs();
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());
 	}

@@ -88,6 +88,11 @@ public class Player implements OnCompletionListener {
 		play(true);
 	}
 	
+	public void playByPosition(final int pos) {
+		mCurrentSong = mPlayList.setCurrentSong(pos);
+		play(true);
+	}
+	
 	public void play(boolean playAnother) {
 		if (mMediaPlayer != null && mPaused && !playAnother) { //need to resume 
 			mMediaPlayer.start();
@@ -109,6 +114,13 @@ public class Player implements OnCompletionListener {
 			Utilities.toaster(context, "error trying to play track: " + mCurrentSong.getTitle() + "\nError: " +
 					e.getMessage());
 		}
+	}
+	
+	public void stop() {
+		if (mPaused) {
+			return;
+		}
+		pause();
 	}
 	
 	public void pause() {

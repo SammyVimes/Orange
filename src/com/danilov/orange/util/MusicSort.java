@@ -1,15 +1,14 @@
 package com.danilov.orange.util;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.net.Uri;
+
 import com.danilov.orange.model.Album;
-import com.danilov.orange.model.Song;
 import com.danilov.orange.model.ArtistProperty;
-import com.danilov.orange.test.MockService;
 
 public class MusicSort {
 	
@@ -49,8 +48,10 @@ public class MusicSort {
 			if (aProperty == null) {
 				String artistName = album.getArtistName();
 				aProperty = new ArtistProperty(artistName);
-				aProperty.setThumbnailPath(album.getThumbnailPath());
 				artistProperty.add(aProperty);
+			}
+			if (Utilities.fileExists(album.getThumbnailPath()) && (aProperty.getThumbnailPath() == null)) {
+				aProperty.setThumbnailPath(album.getThumbnailPath());
 			}
 			aProperty.addAlbum(album);
 		}

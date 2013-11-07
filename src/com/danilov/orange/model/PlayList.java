@@ -54,8 +54,42 @@ public class PlayList {
 		}
 	}
 	
+	public Song get(final int i) {
+		return playList.get(i);
+	}
+	
 	public Song getCurrentSong() {
 		return mCurrentSong;
+	}
+	
+	public int getCurrentSongPosition() {
+		return currentSongPosition;
+	}
+	
+	public Song setCurrentSong(final int pos) {
+		if (pos >= 0 && pos < playList.size()) {
+			currentSongPosition = pos;
+			mCurrentSong = playList.get(pos);
+			return mCurrentSong;
+		}
+		return null;
+	}
+	
+	public Song setCurrentSong(final Song song) {
+		int i = 0;
+		for (Song _song : playList) {
+			if (song == _song) {
+				mCurrentSong = song;
+				currentSongPosition = i;
+				return mCurrentSong;
+			}
+			i++;
+		}
+		return null;
+	}
+	
+	public int size() {
+		return playList.size();
 	}
 	
 	public void add(final Song song) {
