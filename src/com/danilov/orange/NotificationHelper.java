@@ -124,7 +124,9 @@ public class NotificationHelper {
 	        mNotificationView.setTextViewText(R.id.notification_line_two, artistName);
     	}
     }
-    
+   
+    //uses for killing notification in android.sdk < 11, cause it aint have no 
+    //close button
     public void removeNotification() {
     	mService.stopForeground(true);
     }
