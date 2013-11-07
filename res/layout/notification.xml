@@ -21,9 +21,15 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    tools:ignore="ContentDescription"
-    android:background="@color/black">
-
+    tools:ignore="ContentDescription">
+	
+    <ImageView 
+        android:id="@+id/bigIcon"
+        android:layout_width="@dimen/notification_big_icon_width"
+        android:layout_height="@dimen/notification_big_icon_height"
+        android:gravity="center"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_launcher"/>
 
     <LinearLayout
         android:layout_width="0dp"
