@@ -50,7 +50,7 @@ public class NotificationHelper {
 				        .setContent(mNotificationView)
 				        .getNotification();
     	mNotification.contentView = mNotificationView;
-    	boolean hasLargeIcon = true;
+    	boolean hasLargeIcon = true; 
 		try {
 			Class clazz = Class.forName("android.app.Notification;");
 	    	Field field = clazz.getField("largeIcon");
