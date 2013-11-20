@@ -1198,9 +1198,9 @@ containing a value of this type.
         public static final int auto=0x7f040010;
         public static final int bigIcon=0x7f040052;
         public static final int bottom=0x7f040015;
-        public static final int btnLeft=0x7f04003f;
-        public static final int btnPlayPause=0x7f040040;
-        public static final int btnRight=0x7f040041;
+        public static final int btnLeft=0x7f040040;
+        public static final int btnPlayPause=0x7f040041;
+        public static final int btnRight=0x7f040042;
         public static final int buttonClose=0x7f04004b;
         public static final int buttonNext=0x7f04004a;
         public static final int centerView=0x7f040049;
@@ -1228,7 +1228,7 @@ containing a value of this type.
         public static final int open_playlist=0x7f04005d;
         public static final int pager=0x7f040046;
         public static final int player=0x7f040038;
-        public static final int player_footer_bg=0x7f04003e;
+        public static final int player_footer_bg=0x7f04003f;
         public static final int player_header_bg=0x7f040039;
         public static final int playlist=0x7f040043;
         public static final int playlistHeader=0x7f040044;
@@ -1244,7 +1244,7 @@ containing a value of this type.
         public static final int square_view=0x7f04005b;
         public static final int tabMode=0x7f040003;
         public static final int time=0x7f04003b;
-        public static final int timeLine=0x7f040042;
+        public static final int timeLine=0x7f04003e;
         public static final int top=0x7f040014;
         public static final int useLogo=0x7f040004;
         public static final int wrap_content=0x7f040000;

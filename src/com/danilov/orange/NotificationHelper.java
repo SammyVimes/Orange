@@ -67,7 +67,6 @@ public class NotificationHelper {
     	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
     		initPlaybackActions();
     	}
-//    	initPlaybackActions();
     	mService.startForeground(MUSIC_SERVICE, mNotification);
     }
     

@@ -24,7 +24,7 @@ public class BitmapCache {
 	        @Override
 	        protected int sizeOf(Listable key, Bitmap bitmap) {
 	            // The cache size will be measured in kilobytes rather than
-	            // number of items.
+	            // number of items
 	            return BitmapUtils.getSizeInKilobytes(bitmap);
 	        }
 	    };

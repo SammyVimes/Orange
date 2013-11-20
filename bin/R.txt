@@ -474,9 +474,9 @@ int id albumName 0x7f04005a
 int id auto 0x7f040010
 int id bigIcon 0x7f040052
 int id bottom 0x7f040015
-int id btnLeft 0x7f04003f
-int id btnPlayPause 0x7f040040
-int id btnRight 0x7f040041
+int id btnLeft 0x7f040040
+int id btnPlayPause 0x7f040041
+int id btnRight 0x7f040042
 int id buttonClose 0x7f04004b
 int id buttonNext 0x7f04004a
 int id centerView 0x7f040049
@@ -504,7 +504,7 @@ int id notification_previous 0x7f040055
 int id open_playlist 0x7f04005d
 int id pager 0x7f040046
 int id player 0x7f040038
-int id player_footer_bg 0x7f04003e
+int id player_footer_bg 0x7f04003f
 int id player_header_bg 0x7f040039
 int id playlist 0x7f040043
 int id playlistHeader 0x7f040044
@@ -520,7 +520,7 @@ int id songTitle 0x7f04003a
 int id square_view 0x7f04005b
 int id tabMode 0x7f040003
 int id time 0x7f04003b
-int id timeLine 0x7f040042
+int id timeLine 0x7f04003e
 int id top 0x7f040014
 int id useLogo 0x7f040004
 int id wrap_content 0x7f040000
